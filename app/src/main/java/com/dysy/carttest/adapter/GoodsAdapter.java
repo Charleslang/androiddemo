@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.dysy.carttest.GoodsItem;
 import com.dysy.carttest.R;
 import com.dysy.carttest.ShoppingCartActivity;
+import com.dysy.carttest.dto.GoodsDTO;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -24,12 +25,13 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 public class GoodsAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
-    private ArrayList<GoodsItem> dataList;
+//    private ArrayList<GoodsItem> dataList;
+    private ArrayList<GoodsDTO> dataList;
     private ShoppingCartActivity mContext;
     private NumberFormat nf;
     private LayoutInflater mInflater;
 
-    public GoodsAdapter(ArrayList<GoodsItem> dataList, ShoppingCartActivity mContext) {
+    public GoodsAdapter(ArrayList<GoodsDTO> dataList, ShoppingCartActivity mContext) {
         this.dataList = dataList;
         this.mContext = mContext;
         // 对数字格式化，返回当前语言环境的格式1,000,000
@@ -45,13 +47,13 @@ public class GoodsAdapter extends BaseAdapter implements StickyListHeadersAdapte
         if(convertView==null) {
             convertView = mInflater.inflate(R.layout.item_header_view, parent, false);
         }
-        ((TextView)(convertView)).setText(dataList.get(position).typeName);
+        ((TextView)(convertView)).setText(dataList.get(position).getTbGoodsType().getTypeName());
         return convertView;
     }
 
     @Override
     public long getHeaderId(int position) {
-        return dataList.get(position).typeId;
+        return dataList.get(position).getTbGoodsType().getTypeId();
     }
 
     @Override
@@ -82,15 +84,15 @@ public class GoodsAdapter extends BaseAdapter implements StickyListHeadersAdapte
         }else{
             holder = (ItemViewHolder) convertView.getTag();
         }
-        GoodsItem item = dataList.get(position);
+        GoodsDTO item = dataList.get(position);
         holder.bindData(item);
         return convertView;
     }
 
     class ItemViewHolder implements View.OnClickListener{
         private TextView name,price,tvAdd,tvMinus,tvCount;
-        private GoodsItem item;
-        private RatingBar ratingBar;
+        private GoodsDTO item;
+//        private RatingBar ratingBar;
 
         public ItemViewHolder(View itemView) {
             name = itemView.findViewById(R.id.tvName);
@@ -98,19 +100,19 @@ public class GoodsAdapter extends BaseAdapter implements StickyListHeadersAdapte
             tvCount = itemView.findViewById(R.id.count);
             tvMinus = itemView.findViewById(R.id.tvMinus);
             tvAdd = itemView.findViewById(R.id.tvAdd);
-            ratingBar = itemView.findViewById(R.id.ratingBar);
+//            ratingBar = itemView.findViewById(R.id.ratingBar);
             tvMinus.setOnClickListener(this);
             tvAdd.setOnClickListener(this);
         }
 
-        public void bindData(GoodsItem item){
+        public void bindData(GoodsDTO item){
             this.item = item;
-            name.setText(item.name);
-            ratingBar.setRating(item.rating);
-            item.count = mContext.getSelectedItemCountById(item.id);
-            tvCount.setText(String.valueOf(item.count));
-            price.setText(nf.format(item.price));
-            if(item.count<1){
+            name.setText(item.getgName());
+//            ratingBar.setRating(item.rating);
+            item.setSelectNum(mContext.getSelectedItemCountById(item.getgId()));
+            tvCount.setText(String.valueOf(item.getSelectNum()));
+            price.setText(nf.format(item.getgPrice()));
+            if(item.getSelectNum()<1){
                 tvCount.setVisibility(View.GONE);
                 tvMinus.setVisibility(View.GONE);
             }else{
@@ -124,7 +126,7 @@ public class GoodsAdapter extends BaseAdapter implements StickyListHeadersAdapte
             ShoppingCartActivity activity = mContext;
             switch (v.getId()){
                 case R.id.tvAdd: {
-                    int count = activity.getSelectedItemCountById(item.id);
+                    int count = activity.getSelectedItemCountById(item.getgId());
                     if (count < 1) {
                         tvMinus.setAnimation(getShowAnimation());
                         tvMinus.setVisibility(View.VISIBLE);
@@ -139,7 +141,7 @@ public class GoodsAdapter extends BaseAdapter implements StickyListHeadersAdapte
                 }
                 break;
                 case R.id.tvMinus: {
-                    int count = activity.getSelectedItemCountById(item.id);
+                    int count = activity.getSelectedItemCountById(item.getgId());
                     if (count < 2) {
                         tvMinus.setAnimation(getHiddenAnimation());
                         tvMinus.setVisibility(View.GONE);

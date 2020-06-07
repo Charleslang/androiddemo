@@ -86,16 +86,15 @@
 
         <TextView android:textColor="#fff"
             android:layout_width="wrap_content"
-            android:text="￥100元起送"
+            android:text="￥10元起送"
             android:id="@+id/tvTips"
             android:layout_marginRight="10dp"
             android:gravity="center"
             android:layout_height="match_parent" />
         <TextView android:textColor="#fff"
             android:layout_width="120dp"
-            android:background="#22c222"
+            android:background="#008de1"
             android:text="去结算"
-            android:onClick="onClick"
             android:clickable="true"
             android:id="@+id/tvSubmit"
             android:visibility="gone"

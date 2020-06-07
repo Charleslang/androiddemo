@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="10dp"
+        android:background="#ffffff">
+        <TextView
+            android:id="@+id/order_item_gname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="小学生雪糕"/>
+        <TextView
+            android:id="@+id/order_item_gnum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="x3"
+            android:layout_marginLeft="30dp"
+            android:layout_toLeftOf="@id/order_item_gprice"
+            android:layout_marginRight="110dp"/>
+        <TextView
+            android:id="@+id/order_item_gprice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="￥12"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+</LinearLayout>

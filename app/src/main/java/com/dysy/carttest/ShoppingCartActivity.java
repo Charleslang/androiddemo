@@ -3,6 +3,7 @@ package com.dysy.carttest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -27,14 +28,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dysy.carttest.adapter.GoodsAdapter;
 import com.dysy.carttest.adapter.SelectAdapter;
 import com.dysy.carttest.adapter.TypeAdapter;
+import com.dysy.carttest.dto.GoodsDTO;
+import com.dysy.carttest.dto.GoodsTypeDTO;
+import com.dysy.carttest.entity.TbGoodsType;
 import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class ShoppingCartActivity extends AppCompatActivity implements View.OnClickListener{
+public class ShoppingCartActivity extends AppCompatActivity implements View.OnClickListener, Serializable{
 
     private ImageView imgCart;
     private ViewGroup anim_mask_layout;
@@ -44,9 +58,11 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
     private View bottomSheet;
     private StickyListHeadersListView listView;
 
-
-    private ArrayList<GoodsItem> dataList,typeList;
-    private SparseArray<GoodsItem> selectedList;
+//    private ArrayList<GoodsItem> dataList,typeList;
+    private ArrayList<GoodsDTO> dataList = new ArrayList<>();
+    private ArrayList<GoodsTypeDTO> typeList = new ArrayList<>();
+//    private SparseArray<GoodsItem> selectedList;
+    private SparseArray<GoodsDTO> selectedList;
     private SparseIntArray groupSelect;
 
     private GoodsAdapter myAdapter;
@@ -56,6 +72,11 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
     private NumberFormat nf;
     private Handler mHanlder;
     private TextView shoppingBackBtn, shoppingCommentBtn;
+
+    private OkHttpClient okHttpClient = new OkHttpClient();
+    private GoodsThread goodsThread;
+    private double cost = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,10 +84,20 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
         nf = NumberFormat.getCurrencyInstance();
         nf.setMaximumFractionDigits(2);
         mHanlder = new Handler(getMainLooper());
-        dataList = GoodsItem.getGoodsList();
-        typeList = GoodsItem.getTypeList();
+//        dataList = GoodsItem.getGoodsList();
+//        typeList = GoodsItem.getTypeList();
         selectedList = new SparseArray<>();
         groupSelect = new SparseIntArray();
+        goodsThread = new GoodsThread();
+        goodsThread.start();
+        try {
+            goodsThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+//        getAllGoods();
+        Log.d("执行","xxxxxxxxxxxxxxxxx");
+
         initView();
     }
 
@@ -101,17 +132,18 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                GoodsItem item = dataList.get(firstVisibleItem);
-                if(typeAdapter.selectTypeId != item.typeId) {
-                    typeAdapter.selectTypeId = item.typeId;
+                GoodsDTO item = dataList.get(firstVisibleItem);
+                if(typeAdapter.selectTypeId != item.getTbGoodsType().getTypeId()) {
+                    typeAdapter.selectTypeId = item.getTbGoodsType().getTypeId();
                     typeAdapter.notifyDataSetChanged();
-                    rvType.smoothScrollToPosition(getSelectedGroupPosition(item.typeId));
+                    rvType.smoothScrollToPosition(getSelectedGroupPosition(item.getTbGoodsType().getTypeId()));
                 }
             }
         });
 
         shoppingBackBtn.setOnClickListener(this);
         shoppingCommentBtn.setOnClickListener(this);
+        tvSubmit.setOnClickListener(this);
 
     }
 
@@ -193,6 +225,12 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.tvSubmit:
                 Toast.makeText(ShoppingCartActivity.this, "结算", Toast.LENGTH_SHORT).show();
+                intent = new Intent(ShoppingCartActivity.this, OrderActivity.class);
+                Map<String, Object> map = new HashMap<>();
+                map.put("goodsList", selectedList);
+                map.put("cost", cost);
+                intent.putExtra("map",(Serializable) map);
+                startActivity(intent);
                 break;
             case R.id.shopping_back_btn:
                 Toast.makeText(ShoppingCartActivity.this, "返回", Toast.LENGTH_SHORT).show();
@@ -207,41 +245,41 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
     }
 
     //添加商品
-    public void add(GoodsItem item,boolean refreshGoodList){
+    public void add(GoodsDTO item,boolean refreshGoodList){
 
-        int groupCount = groupSelect.get(item.typeId);
+        int groupCount = groupSelect.get(item.getTbGoodsType().getTypeId());
         if(groupCount==0){
-            groupSelect.append(item.typeId,1);
+            groupSelect.append(item.getTbGoodsType().getTypeId(),1);
         }else{
-            groupSelect.append(item.typeId,++groupCount);
+            groupSelect.append(item.getTbGoodsType().getTypeId(),++groupCount);
         }
 
-        GoodsItem temp = selectedList.get(item.id);
+        GoodsDTO temp = selectedList.get(item.getgId());
         if(temp==null){
-            item.count=1;
-            selectedList.append(item.id,item);
+            item.setSelectNum(1);
+            selectedList.append(item.getgId(),item);
         }else{
-            temp.count++;
+            temp.setSelectNum(temp.getSelectNum() + 1);
         }
         update(refreshGoodList);
     }
 
     //移除商品
-    public void remove(GoodsItem item,boolean refreshGoodList){
+    public void remove(GoodsDTO item,boolean refreshGoodList){
 
-        int groupCount = groupSelect.get(item.typeId);
+        int groupCount = groupSelect.get(item.getTbGoodsType().getTypeId());
         if(groupCount==1){
-            groupSelect.delete(item.typeId);
+            groupSelect.delete(item.getTbGoodsType().getTypeId());
         }else if(groupCount>1){
-            groupSelect.append(item.typeId,--groupCount);
+            groupSelect.append(item.getTbGoodsType().getTypeId(),--groupCount);
         }
 
-        GoodsItem temp = selectedList.get(item.id);
+        GoodsDTO temp = selectedList.get(item.getgId());
         if(temp!=null){
-            if(temp.count<2){
-                selectedList.remove(item.id);
+            if(temp.getSelectNum()<2){
+                selectedList.remove(item.getgId());
             }else{
-                item.count--;
+                item.setSelectNum(item.getSelectNum() - 1);
             }
         }
         update(refreshGoodList);
@@ -251,11 +289,12 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
     private void update(boolean refreshGoodList){
         int size = selectedList.size();
         int count =0;
-        double cost = 0;
+//        double cost = 0;
+        cost = 0;
         for(int i=0;i<size;i++){
-            GoodsItem item = selectedList.valueAt(i);
-            count += item.count;
-            cost += item.count*item.price;
+            GoodsDTO item = selectedList.valueAt(i);
+            count += item.getSelectNum();
+            cost += item.getSelectNum()*item.getgPrice();
         }
 
         if(count<1){
@@ -266,7 +305,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
 
         tvCount.setText(String.valueOf(count));
 
-        if(cost > 99.99){
+        if(cost > 10){
             tvTips.setVisibility(View.GONE);
             tvSubmit.setVisibility(View.VISIBLE);
         }else{
@@ -300,11 +339,11 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
 
     //根据商品id获取当前商品的采购数量
     public int getSelectedItemCountById(int id){
-        GoodsItem temp = selectedList.get(id);
+        GoodsDTO temp = selectedList.get(id);
         if(temp==null){
             return 0;
         }
-        return temp.count;
+        return temp.getSelectNum();
     }
 
     //根据类别Id获取属于当前类别的数量
@@ -314,7 +353,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
     //根据类别id获取分类的Position 用于滚动左侧的类别列表
     public int getSelectedGroupPosition(int typeId){
         for(int i=0;i<typeList.size();i++){
-            if(typeId==typeList.get(i).typeId){
+            if(typeId==typeList.get(i).getTypeId()){
                 return i;
             }
         }
@@ -328,7 +367,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
     private int getSelectedPosition(int typeId){
         int position = 0;
         for(int i=0;i<dataList.size();i++){
-            if(dataList.get(i).typeId == typeId){
+            if(dataList.get(i).getTbGoodsType().getTypeId() == typeId){
                 position = i;
                 break;
             }
@@ -338,9 +377,9 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
 
     private View createBottomSheetView(){
         View view = LayoutInflater.from(this).inflate(R.layout.layout_bottom_sheet,(ViewGroup) getWindow().getDecorView(),false);
-        rvSelected = (RecyclerView) view.findViewById(R.id.selectRecyclerView);
+        rvSelected = view.findViewById(R.id.selectRecyclerView);
         rvSelected.setLayoutManager(new LinearLayoutManager(this));
-        TextView clear = (TextView) view.findViewById(R.id.clear);
+        TextView clear = view.findViewById(R.id.clear);
         clear.setOnClickListener(this);
         selectAdapter = new SelectAdapter(this,selectedList);
         rvSelected.setAdapter(selectAdapter);
@@ -358,5 +397,80 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
                 bottomSheetLayout.showWithSheetView(bottomSheet);
             }
         }
+    }
+
+    class GoodsThread extends Thread{
+        @Override
+        public void run() {
+            Log.d("进入Run","*********************");
+            Request request = new Request.Builder()
+                    .url("http://192.168.43.131:8080/GCSJProject/goods/goods")
+                    .get()
+                    .build();
+            Log.d("进入Run1","*********************");
+            try (Response response = okHttpClient.newCall(request).execute()){
+                Log.d("123","2331312");
+                Log.d("try进入","**///***/*/*/*/*/");
+                Gson gson = new Gson();
+//                    Log.d("信息---",gson.fromJson(response.body().string().toString(), String.class));
+                List<TbGoodsType> list = gson.fromJson(response.body().string().toString(), new TypeToken<List<TbGoodsType>>() {
+                }.getType());
+                Log.d("typelist类型",list.size() + "***********------");
+                if (!list.isEmpty()) {
+                    for (TbGoodsType tbGoodsType : list) {
+                        GoodsTypeDTO goodsTypeDTO = new GoodsTypeDTO(tbGoodsType.getTypeId(), tbGoodsType.getTypeName());
+                        Log.d("type*********", tbGoodsType.getTypeId() + "->" +tbGoodsType.getTypeName() + "->" +tbGoodsType.getTbGoodsList().size());
+                        for (GoodsDTO goodsDTO : tbGoodsType.getTbGoodsList()) {
+                            GoodsDTO goods = new GoodsDTO(goodsDTO.getgId(), goodsDTO.getgName(), goodsDTO.getgPrice(),
+                                    goodsDTO.getSelectNum(), goodsDTO.getgPhoto(), goodsDTO.getTbGoodsType());
+                            dataList.add(goods);
+                        }
+                        typeList.add(goodsTypeDTO);
+                    }
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void getAllGoods(){
+        Log.d("getAllGoods","*********************");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("进入Run","*********************");
+                Request request = new Request.Builder()
+                        .url("http://192.168.43.131:8080/GCSJProject/goods/goods")
+                        .get()
+                        .build();
+                Log.d("进入Run1","*********************");
+                try (Response response = okHttpClient.newCall(request).execute()){
+                    Log.d("123","2331312");
+                    Log.d("try进入","**///***/*/*/*/*/");
+                    Gson gson = new Gson();
+//                    Log.d("信息---",gson.fromJson(response.body().string().toString(), String.class));
+                    List<TbGoodsType> list = gson.fromJson(response.body().string().toString(), new TypeToken<List<TbGoodsType>>() {
+                    }.getType());
+                    Log.d("typelist类型",list.size() + "***********------");
+                    if (!list.isEmpty()) {
+                        for (TbGoodsType tbGoodsType : list) {
+                            GoodsTypeDTO goodsTypeDTO = new GoodsTypeDTO(tbGoodsType.getTypeId(), tbGoodsType.getTypeName());
+                            Log.d("type*********", tbGoodsType.getTypeId() + "->" +tbGoodsType.getTypeName() + "->" +tbGoodsType.getTbGoodsList().size());
+                            for (GoodsDTO goodsDTO : tbGoodsType.getTbGoodsList()) {
+                                GoodsDTO goods = new GoodsDTO(goodsDTO.getgId(), goodsDTO.getgName(), goodsDTO.getgPrice(),
+                                        goodsDTO.getSelectNum(), goodsDTO.getgPhoto(), goodsDTO.getTbGoodsType());
+                                dataList.add(goods);
+                            }
+                            typeList.add(goodsTypeDTO);
+                        }
+                        initView();
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

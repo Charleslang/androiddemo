@@ -11,15 +11,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dysy.carttest.GoodsItem;
 import com.dysy.carttest.R;
 import com.dysy.carttest.ShoppingCartActivity;
+import com.dysy.carttest.dto.GoodsDTO;
+import com.dysy.carttest.dto.GoodsTypeDTO;
 
 import java.util.ArrayList;
 
 public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder> {
     public int selectTypeId;
     public ShoppingCartActivity activity;
-    public ArrayList<GoodsItem> dataList;
+//    public ArrayList<GoodsItem> dataList;
+    public ArrayList<GoodsTypeDTO> dataList;
 
-    public TypeAdapter(ShoppingCartActivity activity, ArrayList<GoodsItem> dataList) {
+    public TypeAdapter(ShoppingCartActivity activity, ArrayList<GoodsTypeDTO> dataList) {
         this.activity = activity;
         this.dataList = dataList;
     }
@@ -34,7 +37,7 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        GoodsItem item = dataList.get(position);
+        GoodsTypeDTO item = dataList.get(position);
 
         holder.bindData(item);
     }
@@ -50,25 +53,25 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView tvCount,type;
-        private GoodsItem item;
+        private GoodsTypeDTO item;
         public ViewHolder(View itemView) {
             super(itemView);
-            tvCount = (TextView) itemView.findViewById(R.id.tvCount);
-            type = (TextView) itemView.findViewById(R.id.type);
+            tvCount = itemView.findViewById(R.id.tvCount);
+            type = itemView.findViewById(R.id.type);
             itemView.setOnClickListener(this);
         }
 
-        public void bindData(GoodsItem item){
+        public void bindData(GoodsTypeDTO item){
             this.item = item;
-            type.setText(item.typeName);
-            int count = activity.getSelectedGroupCountByTypeId(item.typeId);
+            type.setText(item.getTypeName());
+            int count = activity.getSelectedGroupCountByTypeId(item.getTypeId());
             tvCount.setText(String.valueOf(count));
             if(count<1){
                 tvCount.setVisibility(View.GONE);
             }else{
                 tvCount.setVisibility(View.VISIBLE);
             }
-            if(item.typeId==selectTypeId){
+            if(item.getTypeId()==selectTypeId){
                 itemView.setBackgroundColor(Color.WHITE);
             }else{
                 itemView.setBackgroundColor(Color.TRANSPARENT);
@@ -78,7 +81,7 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder> {
 
         @Override
         public void onClick(View v) {
-            activity.onTypeClicked(item.typeId);
+            activity.onTypeClicked(item.getTypeId());
         }
     }
 }

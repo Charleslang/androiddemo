@@ -11,16 +11,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dysy.carttest.GoodsItem;
 import com.dysy.carttest.R;
 import com.dysy.carttest.ShoppingCartActivity;
+import com.dysy.carttest.dto.GoodsDTO;
 
 import java.text.NumberFormat;
 
 
 public class SelectAdapter extends RecyclerView.Adapter<SelectAdapter.ViewHolder>{
     private ShoppingCartActivity activity;
-    private SparseArray<GoodsItem> dataList;
+//    private SparseArray<GoodsItem> dataList;
+    private SparseArray<GoodsDTO> dataList;
     private NumberFormat nf;
     private LayoutInflater mInflater;
-    public SelectAdapter(ShoppingCartActivity activity, SparseArray<GoodsItem> dataList) {
+    public SelectAdapter(ShoppingCartActivity activity, SparseArray<GoodsDTO> dataList) {
         this.activity = activity;
         this.dataList = dataList;
         nf = NumberFormat.getCurrencyInstance();
@@ -36,7 +38,7 @@ public class SelectAdapter extends RecyclerView.Adapter<SelectAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        GoodsItem item = dataList.valueAt(position);
+        GoodsDTO item = dataList.valueAt(position);
         holder.bindData(item);
     }
 
@@ -49,16 +51,16 @@ public class SelectAdapter extends RecyclerView.Adapter<SelectAdapter.ViewHolder
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        private GoodsItem item;
+        private GoodsDTO item;
         private TextView tvCost,tvCount,tvAdd,tvMinus,tvName;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            tvName = (TextView) itemView.findViewById(R.id.tvName);
-            tvCost = (TextView) itemView.findViewById(R.id.tvCost);
-            tvCount = (TextView) itemView.findViewById(R.id.count);
-            tvMinus = (TextView) itemView.findViewById(R.id.tvMinus);
-            tvAdd = (TextView) itemView.findViewById(R.id.tvAdd);
+            tvName = itemView.findViewById(R.id.tvName);
+            tvCost = itemView.findViewById(R.id.tvCost);
+            tvCount = itemView.findViewById(R.id.count);
+            tvMinus = itemView.findViewById(R.id.tvMinus);
+            tvAdd = itemView.findViewById(R.id.tvAdd);
             tvMinus.setOnClickListener(this);
             tvAdd.setOnClickListener(this);
         }
@@ -77,11 +79,11 @@ public class SelectAdapter extends RecyclerView.Adapter<SelectAdapter.ViewHolder
             }
         }
 
-        public void bindData(GoodsItem item){
+        public void bindData(GoodsDTO item){
             this.item = item;
-            tvName.setText(item.name);
-            tvCost.setText(nf.format(item.count*item.price));
-            tvCount.setText(String.valueOf(item.count));
+            tvName.setText(item.getgName());
+            tvCost.setText(nf.format(item.getSelectNum()*item.getgPrice()));
+            tvCount.setText(String.valueOf(item.getSelectNum()));
         }
     }
 }
