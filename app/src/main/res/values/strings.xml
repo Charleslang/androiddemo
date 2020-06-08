@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">carttest</string>
+
+<!--    qinjie-->
+    <string name="server_path">http://139.9.87.17:8081/CampusShops</string>
+    <!--    <string name="server_path">http://192.168.43.207:8080/CampusShops</string>-->
+    <string name="interface_user_login_qq">/users/loginQQ</string>
+    <string name="interface_user_login">/users/login</string>
+    <string name="interface_user_logout">/users/logout</string>
+    <string name="interface_user_register">/users/register</string>
+    <string name="interface_user_info">/users/info</string>
+    <string name="interface_user_info_update">/users/info/update</string>
+    <string name="interface_files_upload">/files/upload</string>
+    <string name="interface_users_addresses">/users/addresses</string>
+    <string name="interface_users_addresses_default">/users/addresses/default</string>
+    <string name="interface_users_orders">/users/orders</string>
+    <string name="title_activity_personal_order_main">PersonalOrderMainActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="string_persistent">TOKEN</string>
 </resources>
