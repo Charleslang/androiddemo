@@ -228,7 +228,7 @@ public class HttpClient1 {
             // str为json字符串
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.e("ERROR", e.getMessage());
         }
         return str;
     }
