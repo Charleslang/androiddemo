@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.SparseArray;
@@ -25,10 +26,9 @@ public class OrderActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private OrderItemAdapter orderItemAdapter;
-    private List mList = new ArrayList();
     private SparseArray<GoodsDTO> selectedList;
     private double cost;
-    private TextView orderOrder, orderPaymoney, orderBpaymoney;
+    private TextView orderOrder, orderPaymoney, orderBpaymoney, orderTopContent, orderSubmit;
     private NumberFormat nf;
 
 
@@ -48,6 +48,8 @@ public class OrderActivity extends AppCompatActivity {
         orderOrder = findViewById(R.id.order_order);
         orderPaymoney = findViewById(R.id.order_paymoney);
         orderBpaymoney = findViewById(R.id.order_bpaymoney);
+        orderTopContent = findViewById(R.id.order_topcontent);
+        orderSubmit = findViewById(R.id.order_submit);
 
         mRecyclerView = findViewById(R.id.rv_order_list);
         mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
@@ -60,21 +62,28 @@ public class OrderActivity extends AppCompatActivity {
         orderPaymoney.setText("待支付" + nf.format(cost + 2));
         orderBpaymoney.setText("待支付" + nf.format(cost + 2));
 
+        orderTopContent.getPaint().setFakeBoldText(true);
+        orderPaymoney.getPaint().setFakeBoldText(true);
+        orderSubmit.getPaint().setFakeBoldText(true);
+
         orderBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+
+        orderSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OrderActivity.this, ReadyPayActivity.class);
+                intent.putExtra("cost",cost);
+                startActivity(intent);
+            }
+        });
     }
 
     public void initDate() {
-//        mList.add(1);
-//        mList.add(2);
-//        mList.add(3);
-//        mList.add(4);
-//        mList.add(5);
-//        mList.add(6);
         Map<String, Object> map = (HashMap<String, Object>)getIntent().getSerializableExtra("map");
         selectedList = (SparseArray<GoodsDTO>) map.get("goodsList");
         cost = (Double) map.get("cost");

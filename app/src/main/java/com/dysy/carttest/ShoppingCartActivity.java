@@ -3,6 +3,7 @@ package com.dysy.carttest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -21,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,7 +55,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
     private ImageView imgCart;
     private ViewGroup anim_mask_layout;
     private RecyclerView rvType,rvSelected;
-    private TextView tvCount,tvCost,tvSubmit,tvTips;
+    private TextView tvCount,tvCost,tvSubmit,tvTips, shoppingTopContent;
     private BottomSheetLayout bottomSheetLayout;
     private View bottomSheet;
     private StickyListHeadersListView listView;
@@ -76,6 +78,17 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
     private OkHttpClient okHttpClient = new OkHttpClient();
     private GoodsThread goodsThread;
     private double cost = 0;
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    initView();
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,17 +101,16 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
 //        typeList = GoodsItem.getTypeList();
         selectedList = new SparseArray<>();
         groupSelect = new SparseIntArray();
-        goodsThread = new GoodsThread();
-        goodsThread.start();
-        try {
-            goodsThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-//        getAllGoods();
-        Log.d("执行","xxxxxxxxxxxxxxxxx");
+//        goodsThread = new GoodsThread();
+//        goodsThread.start();
+//        try {
+//            goodsThread.join();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        getAllGoods();
 
-        initView();
+//        initView();
     }
 
     private void initView(){
@@ -109,6 +121,9 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
         rvType = findViewById(R.id.typeRecyclerView);
         shoppingBackBtn = findViewById(R.id.shopping_back_btn);
         shoppingCommentBtn = findViewById(R.id.shopping_comment_btn);
+        shoppingTopContent = findViewById(R.id.shopping_topcontent);
+
+        shoppingTopContent.getPaint().setFakeBoldText(true);
 
         imgCart = findViewById(R.id.imgCart);
         anim_mask_layout = (RelativeLayout) findViewById(R.id.containerLayout);
@@ -402,24 +417,17 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
     class GoodsThread extends Thread{
         @Override
         public void run() {
-            Log.d("进入Run","*********************");
             Request request = new Request.Builder()
                     .url("http://192.168.43.131:8080/GCSJProject/goods/goods")
                     .get()
                     .build();
-            Log.d("进入Run1","*********************");
             try (Response response = okHttpClient.newCall(request).execute()){
-                Log.d("123","2331312");
-                Log.d("try进入","**///***/*/*/*/*/");
                 Gson gson = new Gson();
-//                    Log.d("信息---",gson.fromJson(response.body().string().toString(), String.class));
                 List<TbGoodsType> list = gson.fromJson(response.body().string().toString(), new TypeToken<List<TbGoodsType>>() {
                 }.getType());
-                Log.d("typelist类型",list.size() + "***********------");
                 if (!list.isEmpty()) {
                     for (TbGoodsType tbGoodsType : list) {
                         GoodsTypeDTO goodsTypeDTO = new GoodsTypeDTO(tbGoodsType.getTypeId(), tbGoodsType.getTypeName());
-                        Log.d("type*********", tbGoodsType.getTypeId() + "->" +tbGoodsType.getTypeName() + "->" +tbGoodsType.getTbGoodsList().size());
                         for (GoodsDTO goodsDTO : tbGoodsType.getTbGoodsList()) {
                             GoodsDTO goods = new GoodsDTO(goodsDTO.getgId(), goodsDTO.getgName(), goodsDTO.getgPrice(),
                                     goodsDTO.getSelectNum(), goodsDTO.getgPhoto(), goodsDTO.getTbGoodsType());
@@ -435,28 +443,20 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
         }
     }
     public void getAllGoods(){
-        Log.d("getAllGoods","*********************");
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.d("进入Run","*********************");
                 Request request = new Request.Builder()
                         .url("http://192.168.43.131:8080/GCSJProject/goods/goods")
                         .get()
                         .build();
-                Log.d("进入Run1","*********************");
                 try (Response response = okHttpClient.newCall(request).execute()){
-                    Log.d("123","2331312");
-                    Log.d("try进入","**///***/*/*/*/*/");
                     Gson gson = new Gson();
-//                    Log.d("信息---",gson.fromJson(response.body().string().toString(), String.class));
                     List<TbGoodsType> list = gson.fromJson(response.body().string().toString(), new TypeToken<List<TbGoodsType>>() {
                     }.getType());
-                    Log.d("typelist类型",list.size() + "***********------");
                     if (!list.isEmpty()) {
                         for (TbGoodsType tbGoodsType : list) {
                             GoodsTypeDTO goodsTypeDTO = new GoodsTypeDTO(tbGoodsType.getTypeId(), tbGoodsType.getTypeName());
-                            Log.d("type*********", tbGoodsType.getTypeId() + "->" +tbGoodsType.getTypeName() + "->" +tbGoodsType.getTbGoodsList().size());
                             for (GoodsDTO goodsDTO : tbGoodsType.getTbGoodsList()) {
                                 GoodsDTO goods = new GoodsDTO(goodsDTO.getgId(), goodsDTO.getgName(), goodsDTO.getgPrice(),
                                         goodsDTO.getSelectNum(), goodsDTO.getgPhoto(), goodsDTO.getTbGoodsType());
@@ -464,7 +464,9 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
                             }
                             typeList.add(goodsTypeDTO);
                         }
-                        initView();
+                        Message message = new Message();
+                        message.what = 1;
+                        mHandler.sendMessage(message);
                     }
 
                 } catch (IOException e) {

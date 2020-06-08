@@ -9,9 +9,11 @@ import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.dysy.carttest.GoodsItem;
 import com.dysy.carttest.R;
 import com.dysy.carttest.ShoppingCartActivity;
@@ -92,6 +94,7 @@ public class GoodsAdapter extends BaseAdapter implements StickyListHeadersAdapte
     class ItemViewHolder implements View.OnClickListener{
         private TextView name,price,tvAdd,tvMinus,tvCount;
         private GoodsDTO item;
+        private ImageView img;
 //        private RatingBar ratingBar;
 
         public ItemViewHolder(View itemView) {
@@ -100,6 +103,7 @@ public class GoodsAdapter extends BaseAdapter implements StickyListHeadersAdapte
             tvCount = itemView.findViewById(R.id.count);
             tvMinus = itemView.findViewById(R.id.tvMinus);
             tvAdd = itemView.findViewById(R.id.tvAdd);
+            img = itemView.findViewById(R.id.img);
 //            ratingBar = itemView.findViewById(R.id.ratingBar);
             tvMinus.setOnClickListener(this);
             tvAdd.setOnClickListener(this);
@@ -112,6 +116,7 @@ public class GoodsAdapter extends BaseAdapter implements StickyListHeadersAdapte
             item.setSelectNum(mContext.getSelectedItemCountById(item.getgId()));
             tvCount.setText(String.valueOf(item.getSelectNum()));
             price.setText(nf.format(item.getgPrice()));
+            Glide.with(mContext).load("https://img14.360buyimg.com/n7/jfs/t1/111421/35/8291/241351/5eccf389E9337c640/3c6fdabf0d9502f7.jpg").centerCrop().into(img);
             if(item.getSelectNum()<1){
                 tvCount.setVisibility(View.GONE);
                 tvMinus.setVisibility(View.GONE);
