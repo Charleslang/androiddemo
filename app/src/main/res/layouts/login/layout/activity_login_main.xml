@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#F9F9F8"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="登陆"
+        android:textColor="#000000"
+        />
+    <LinearLayout
+        android:background="#F9F9F8"
+        android:layout_marginTop="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_title"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_profile" />
+    </LinearLayout>
+
+
+    <include
+        android:id="@+id/input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/login_input_layout" />
+    <LinearLayout
+        android:layout_below="@+id/relative_login_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_centerInParent="true" >
+        <TextView
+            android:id="@+id/login_main_text_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="注册新用户"
+            android:textColor="#0078FD"
+            android:gravity="center"
+            android:layout_weight="1"
+            />
+        <TextView
+            android:id="@+id/login_main_text_forgot"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="忘记密码"
+            android:textColor="#0078FD"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:id="@+id/relative_login_2"
+        android:layout_below="@+id/relative_login_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_centerInParent="true" >
+        <ImageView
+            android:id="@+id/login_main_image_qq"
+            android:layout_width="55dip"
+            android:layout_height="55dip"
+            android:src="@drawable/ic_qq" />
+        <ImageView
+            android:id="@+id/login_main_image_wechat"
+            android:layout_marginLeft="30dp"
+            android:layout_width="55dip"
+            android:layout_height="55dip"
+            android:src="@drawable/ic_wechat" />
+    </LinearLayout>
+
+</LinearLayout>

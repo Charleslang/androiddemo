@@ -1,4 +1,4 @@
-package com.qinjie.demo.pojo;
+package com;
 
 import android.app.Application;
 import android.content.ComponentCallbacks;

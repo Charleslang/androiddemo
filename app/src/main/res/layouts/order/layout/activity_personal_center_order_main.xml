@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/personal_center_order_swipeRefreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_height="50dp">
+            <ImageView
+                android:id="@+id/personal_center_order_return"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_arrow_left"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#F9F9F9"
+                android:gravity="center"
+                android:text="我的订单"
+                android:textSize="40sp" />
+        </LinearLayout>
+        <com.library.tabstrip.PagerSlidingTabStrip
+            android:id="@+id/personal_center_order_status"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/personal_center_order_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
