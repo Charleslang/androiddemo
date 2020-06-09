@@ -313,7 +313,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
 
         tvCount.setText(String.valueOf(count));
 
-        if(cost > 10){
+        if(cost >= 10){
             tvTips.setVisibility(View.GONE);
             tvSubmit.setVisibility(View.VISIBLE);
         }else{

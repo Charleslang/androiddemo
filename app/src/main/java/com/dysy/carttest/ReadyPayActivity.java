@@ -2,12 +2,13 @@ package com.dysy.carttest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.TextView;
 
-import com.dysy.carttest.dialog.ShowExitDialog;
+import com.dysy.carttest.dialog.ExitDialog;
 
 import java.text.NumberFormat;
 
@@ -17,6 +18,7 @@ public class ReadyPayActivity extends AppCompatActivity {
     private double cost;
     private String costStr;
     private CountDownTimer timer = null;
+    private ExitDialog exitDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +61,11 @@ public class ReadyPayActivity extends AppCompatActivity {
         readyPayCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShowExitDialog showExitDialog = new ShowExitDialog();
-                showExitDialog.show(ReadyPayActivity.this, "提示信息","订单未支付，确定取消？");
+                cancelOrderNotice();
             }
         });
     }
 
-    // 开启倒计时
     public void startTimer(){
         // 总共为15分钟，每秒触发一次
         timer = new CountDownTimer(900000, 1000) {
@@ -98,5 +98,35 @@ public class ReadyPayActivity extends AppCompatActivity {
             }
         };
         timer.start();
+    }
+
+    @Override
+    public void onBackPressed() {
+        cancelOrderNotice();
+    }
+
+    public void cancelOrderNotice(){
+        exitDialog = new ExitDialog(ReadyPayActivity.this);
+        exitDialog.setTitle("提示消息");
+        exitDialog.setMessage("订单未支付，确定取消支付？");
+        exitDialog.setYesOnclickListener("确定", new ExitDialog.onYesOnclickListener() {
+            @Override
+            public void onYesClick() {
+                if (timer != null) {
+                    timer.cancel();
+                    timer = null;
+                }
+                exitDialog.dismiss();
+                Intent itent = new Intent(ReadyPayActivity.this, ShoppingCartActivity.class);
+                ReadyPayActivity.this.startActivity(itent);
+            }
+        });
+        exitDialog.setNoOnclickListener("取消", new ExitDialog.onNoOnclickListener() {
+            @Override
+            public void onNoClick() {
+                exitDialog.dismiss();
+            }
+        });
+        exitDialog.show();
     }
 }
