@@ -9,6 +9,7 @@ public class GoodsDTO implements Serializable {
     private Integer gId;
     private String gName;
     private Float gPrice;
+    private int gNumber;
     private Integer selectNum;
     private String gPhoto;
     private TbGoodsType tbGoodsType;
@@ -17,10 +18,11 @@ public class GoodsDTO implements Serializable {
 
     }
 
-    public GoodsDTO(Integer gId, String gName, Float gPrice, Integer selectNum, String gPhoto, TbGoodsType tbGoodsType) {
+    public GoodsDTO(Integer gId, String gName, Float gPrice, int gNumber, Integer selectNum, String gPhoto, TbGoodsType tbGoodsType) {
         this.gId = gId;
         this.gName = gName;
         this.gPrice = gPrice;
+        this.gNumber = gNumber;
         this.selectNum = selectNum;
         this.gPhoto = gPhoto;
         this.tbGoodsType = tbGoodsType;
@@ -72,5 +74,13 @@ public class GoodsDTO implements Serializable {
 
     public void setTbGoodsType(TbGoodsType tbGoodsType) {
         this.tbGoodsType = tbGoodsType;
+    }
+
+    public int getgNumber() {
+        return gNumber;
+    }
+
+    public void setgNumber(int gNumber) {
+        this.gNumber = gNumber;
     }
 }

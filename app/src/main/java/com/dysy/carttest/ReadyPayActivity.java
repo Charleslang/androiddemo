@@ -7,6 +7,8 @@ import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.TextView;
 
+import com.dysy.carttest.dialog.ShowExitDialog;
+
 import java.text.NumberFormat;
 
 public class ReadyPayActivity extends AppCompatActivity {
@@ -52,6 +54,13 @@ public class ReadyPayActivity extends AppCompatActivity {
                     timer.cancel();
                     timer = null;
                 }
+            }
+        });
+        readyPayCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowExitDialog showExitDialog = new ShowExitDialog();
+                showExitDialog.show(ReadyPayActivity.this, "提示信息","订单未支付，确定取消？");
             }
         });
     }

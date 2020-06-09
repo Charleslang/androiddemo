@@ -33,6 +33,8 @@ import com.dysy.carttest.adapter.TypeAdapter;
 import com.dysy.carttest.dto.GoodsDTO;
 import com.dysy.carttest.dto.GoodsTypeDTO;
 import com.dysy.carttest.entity.TbGoodsType;
+import com.dysy.carttest.util.OkHttpCallback;
+import com.dysy.carttest.util.OkHttpUtil;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -76,7 +78,6 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
     private TextView shoppingBackBtn, shoppingCommentBtn;
 
     private OkHttpClient okHttpClient = new OkHttpClient();
-    private GoodsThread goodsThread;
     private double cost = 0;
     private Handler mHandler = new Handler(){
         @Override
@@ -101,15 +102,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
 //        typeList = GoodsItem.getTypeList();
         selectedList = new SparseArray<>();
         groupSelect = new SparseIntArray();
-//        goodsThread = new GoodsThread();
-//        goodsThread.start();
-//        try {
-//            goodsThread.join();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
         getAllGoods();
-
 //        initView();
     }
 
@@ -414,65 +407,60 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    class GoodsThread extends Thread{
-        @Override
-        public void run() {
-            Request request = new Request.Builder()
-                    .url("http://192.168.43.131:8080/GCSJProject/goods/goods")
-                    .get()
-                    .build();
-            try (Response response = okHttpClient.newCall(request).execute()){
+    public void getAllGoods(){
+        OkHttpUtil.get("http://192.168.43.131:8080/GCSJProject/goods/goods", new OkHttpCallback(){
+            @Override
+            public void onFinish(String status, String mes) {
                 Gson gson = new Gson();
-                List<TbGoodsType> list = gson.fromJson(response.body().string().toString(), new TypeToken<List<TbGoodsType>>() {
+                List<TbGoodsType> list = gson.fromJson(mes, new TypeToken<List<TbGoodsType>>() {
                 }.getType());
                 if (!list.isEmpty()) {
                     for (TbGoodsType tbGoodsType : list) {
                         GoodsTypeDTO goodsTypeDTO = new GoodsTypeDTO(tbGoodsType.getTypeId(), tbGoodsType.getTypeName());
                         for (GoodsDTO goodsDTO : tbGoodsType.getTbGoodsList()) {
-                            GoodsDTO goods = new GoodsDTO(goodsDTO.getgId(), goodsDTO.getgName(), goodsDTO.getgPrice(),
+                            GoodsDTO goods = new GoodsDTO(goodsDTO.getgId(), goodsDTO.getgName(), goodsDTO.getgPrice(),goodsDTO.getgNumber(),
                                     goodsDTO.getSelectNum(), goodsDTO.getgPhoto(), goodsDTO.getTbGoodsType());
                             dataList.add(goods);
                         }
                         typeList.add(goodsTypeDTO);
                     }
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    public void getAllGoods(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Request request = new Request.Builder()
-                        .url("http://192.168.43.131:8080/GCSJProject/goods/goods")
-                        .get()
-                        .build();
-                try (Response response = okHttpClient.newCall(request).execute()){
-                    Gson gson = new Gson();
-                    List<TbGoodsType> list = gson.fromJson(response.body().string().toString(), new TypeToken<List<TbGoodsType>>() {
-                    }.getType());
-                    if (!list.isEmpty()) {
-                        for (TbGoodsType tbGoodsType : list) {
-                            GoodsTypeDTO goodsTypeDTO = new GoodsTypeDTO(tbGoodsType.getTypeId(), tbGoodsType.getTypeName());
-                            for (GoodsDTO goodsDTO : tbGoodsType.getTbGoodsList()) {
-                                GoodsDTO goods = new GoodsDTO(goodsDTO.getgId(), goodsDTO.getgName(), goodsDTO.getgPrice(),
-                                        goodsDTO.getSelectNum(), goodsDTO.getgPhoto(), goodsDTO.getTbGoodsType());
-                                dataList.add(goods);
-                            }
-                            typeList.add(goodsTypeDTO);
-                        }
-                        Message message = new Message();
-                        message.what = 1;
-                        mHandler.sendMessage(message);
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    Message message = new Message();
+                    message.what = 1;
+                    mHandler.sendMessage(message);
                 }
             }
-        }).start();
+        });
     }
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Request request = new Request.Builder()
+//                        .url("http://192.168.43.131:8080/GCSJProject/goods/goods")
+//                        .get()
+//                        .build();
+//                try (Response response = okHttpClient.newCall(request).execute()){
+//                    Gson gson = new Gson();
+//                    List<TbGoodsType> list = gson.fromJson(response.body().string().toString(), new TypeToken<List<TbGoodsType>>() {
+//                    }.getType());
+//                    if (!list.isEmpty()) {
+//                        for (TbGoodsType tbGoodsType : list) {
+//                            GoodsTypeDTO goodsTypeDTO = new GoodsTypeDTO(tbGoodsType.getTypeId(), tbGoodsType.getTypeName());
+//                            for (GoodsDTO goodsDTO : tbGoodsType.getTbGoodsList()) {
+//                                GoodsDTO goods = new GoodsDTO(goodsDTO.getgId(), goodsDTO.getgName(), goodsDTO.getgPrice(),
+//                                        goodsDTO.getSelectNum(), goodsDTO.getgPhoto(), goodsDTO.getTbGoodsType());
+//                                dataList.add(goods);
+//                            }
+//                            typeList.add(goodsTypeDTO);
+//                        }
+//                        Message message = new Message();
+//                        message.what = 1;
+//                        mHandler.sendMessage(message);
+//                    }
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+//    }
 }

@@ -25,13 +25,22 @@
         android:supportsRtl="true"
         android:networkSecurityConfig="@xml/network_config"
         android:theme="@style/AppTheme">
+        <activity android:name=".ReadyPayActivity">
+
+        </activity>
         <activity android:name=".OrderActivity">
         </activity>
         <activity android:name=".CommentActivity" />
         <activity android:name=".MainActivity">
 
         </activity>
+
         <activity android:name=".ShoppingCartActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
 
@@ -49,11 +58,7 @@
         <activity android:name="com.qinjie.demo.personal.address.PersonalCenterAddressMainActivity" />
         <activity android:name="com.qinjie.demo.personal.order.PersonalCenterOrderMainActivity" />
         <activity android:name="com.qinjie.demo.login.LoginMainActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
         </activity>
         <activity

@@ -1,5 +1,6 @@
 package com.dysy.carttest.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -137,12 +138,15 @@ public class GoodsAdapter extends BaseAdapter implements StickyListHeadersAdapte
                         tvMinus.setVisibility(View.VISIBLE);
                         tvCount.setVisibility(View.VISIBLE);
                     }
-                    activity.add(item, false);
-                    count++;
-                    tvCount.setText(String.valueOf(count));
-                    int[] loc = new int[2];
-                    v.getLocationInWindow(loc);
-                    activity.playAnimation(loc);
+
+                    if (count < item.getgNumber()) {
+                        activity.add(item, false);
+                        count++;
+                        tvCount.setText(String.valueOf(count));
+                        int[] loc = new int[2];
+                        v.getLocationInWindow(loc);
+                        activity.playAnimation(loc);
+                    }
                 }
                 break;
                 case R.id.tvMinus: {
