@@ -1,0 +1,14 @@
+-------------------------代俊峰第五次提交-------------------------
+    在项目的build.gradle中添加如下内容：
+    allprojects {
+        repositories {
+            // 添加下面的内容
+            flatDir {
+                dirs 'libs'
+            }
+        }
+    }
+
+    在app/build.gradle中添加：
+    implementation (name: 'alipaySdk-15.7.6-20200521195109', ext: 'aar')
+----------------------------------------------------------------

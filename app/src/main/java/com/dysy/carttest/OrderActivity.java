@@ -19,6 +19,7 @@ import com.dysy.carttest.adapter.OrderItemAdapter;
 import com.dysy.carttest.dto.GoodsDTO;
 import com.dysy.carttest.dto.InsertOrderDTO;
 import com.dysy.carttest.dto.OrderDetailsDTO;
+import com.dysy.carttest.util.MyBigDecimal;
 import com.dysy.carttest.util.OkHttpCallback;
 import com.dysy.carttest.util.OkHttpUtil;
 import com.google.gson.Gson;
@@ -42,7 +43,7 @@ public class OrderActivity extends AppCompatActivity {
     private LinearLayoutManager mLinearLayoutManager;
     private OrderItemAdapter orderItemAdapter;
     private SparseArray<GoodsDTO> selectedList;
-    private double cost;
+    private Double cost;
     private TextView orderOrder, orderPaymoney, orderBpaymoney, orderTopContent, orderSubmit;
     private TextView orderName, orderTel, orderLocation;
     private NumberFormat nf;
@@ -118,11 +119,12 @@ public class OrderActivity extends AppCompatActivity {
                                     .build();
                             try (Response response = okHttpClient.newCall(request).execute()) {
                                 Gson gson = new Gson();
-                                InsertOrderDTO order = gson.fromJson(response.body().string().toString(), InsertOrderDTO.class);
-                                Log.d("onf1","----------");
-                                if (order != null) {
+                                Integer orderId = gson.fromJson(response.body().string().toString(), Integer.class);
+                                if (orderId != 0) {
                                     Intent intent = new Intent(OrderActivity.this, ReadyPayActivity.class);
-                                    intent.putExtra("cost",cost);
+                                    intent.putExtra("cost",cost+2);
+                                    intent.putExtra("orderId", orderId);
+                                    Log.d("orderId-------",orderId + "*****************");
                                     startActivity(intent);
                                 } else {
                                     Log.d("订单错误","---------------");
@@ -161,9 +163,12 @@ public class OrderActivity extends AppCompatActivity {
                     goodsDTO.getgNumber() - goodsDTO.getSelectNum());
             orderDetailsDTOList.add(orderDetailsDTO);
         }
-        insertOrderDTO = new InsertOrderDTO(String.valueOf(1),1,"react",
+        float price = Float.parseFloat(MyBigDecimal.add(cost,2));
+        Log.d("价格price---:" ,price + "------------------");
+        Log.d("加法->",MyBigDecimal.add(cost,2));
+        insertOrderDTO = new InsertOrderDTO(price, String.valueOf(1),1,"react",
                 orderLocation.getText().toString(),
-                selectedList.valueAt(0).getgPhoto(),"零食店铺(成信大店)",
-                String.valueOf(System.currentTimeMillis()),orderDetailsDTOList);
+                "零食店铺(成信大店)",
+                null,orderDetailsDTOList);
     }
 }
