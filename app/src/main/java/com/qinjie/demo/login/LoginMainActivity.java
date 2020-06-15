@@ -16,10 +16,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.MyApplication;
 import com.alibaba.fastjson.JSONObject;
 import com.dysy.carttest.R;
 import com.qinjie.demo.main.MainMainActivity;
-import com.MyApplication;
 import com.qinjie.demo.utils.HttpClient1;
 import com.qinjie.demo.utils.PersistenceToken;
 import com.qinjie.demo.utils.ThreadPoolExecutorService;
@@ -70,9 +70,18 @@ public class LoginMainActivity extends AppCompatActivity implements View.OnClick
         String token = null;
         if(!(token = PersistenceToken.getToken(LoginMainActivity.this)).equals("")){
             ((MyApplication) getApplication()).setToken(token);
-            Toast.makeText(LoginMainActivity.this, token, Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(LoginMainActivity.this, MainMainActivity.class);
-            startActivity(intent);
+//            Toast.makeText(LoginMainActivity.this, token, Toast.LENGTH_SHORT).show();
+            ThreadPoolExecutorService.add(new Runnable() {
+                @Override
+                public void run() {
+                    String res = HttpClient1.doGet(getString(R.string.server_path) + getString(R.string.interface_users_validate),  ((MyApplication) getApplication()).getToken());
+                    JSONObject jsonObject = JSONObject.parseObject(res);
+                    if(jsonObject.get("code").equals(200)){
+                        Intent intent = new Intent(LoginMainActivity.this, MainMainActivity.class);
+                        startActivity(intent);
+                    }
+                }
+            });
         }
 
         super.onCreate(savedInstanceState);
@@ -249,6 +258,9 @@ public class LoginMainActivity extends AppCompatActivity implements View.OnClick
                 case 1: //错误
                     String toast1 = ""+msg.getData().get("toast");
                     Toast.makeText(LoginMainActivity.this, toast1, Toast.LENGTH_SHORT).show();
+
+                    break;
+                case 2: //自动登陆时token到期
 
                     break;
                 default:

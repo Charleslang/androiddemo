@@ -13,10 +13,10 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.MyApplication;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dysy.carttest.R;
-import com.MyApplication;
 import com.qinjie.demo.utils.HttpClient1;
 import com.qinjie.demo.utils.ThreadPoolExecutorService;
 
