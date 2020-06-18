@@ -7,17 +7,8 @@ import android.os.Message;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Strings;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,12 +31,6 @@ import okhttp3.Response;
  * @author: qinjie
  **/
 public class HttpClient1 {
-    private static CloseableHttpClient httpClient = null;
-
-    static {
-        // 通过址默认配置创建一个httpClient实例
-        httpClient = HttpClients.createDefault();
-    }
 
     /**
      * 功能描述: get方法，访问目标地址，得到字符串返回值
@@ -72,52 +57,7 @@ public class HttpClient1 {
     }
 
 
-    /**
-     * 功能描述: post方法访问目标方法，得到结果
-     *
-     * @param: url目标地址，paramMap变量, token 标识
-     * @return: 字符串结果
-     * @auther: 秦杰
-     * @date: 2019/8/29 11:39
-     */
-    public static String doPost(String url, Map<String, Object> paramMap, String token) {
-        CloseableHttpResponse httpResponse = null;
-        String result = "";
-        // 创建httpPost远程连接实例
-        HttpPost httpPost = new HttpPost(url);
-        // 配置请求参数实例
-        RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(35000)// 设置连接主机服务超时时间
-                .setConnectionRequestTimeout(35000)// 设置连接请求超时时间
-                .setSocketTimeout(60000)// 设置读取数据连接超时时间
-                .build();
-        // 为httpPost实例设置配置
-        httpPost.setConfig(requestConfig);
-        // 设置请求头
-        httpPost.addHeader("Content-Type", "application/json");
-        if (token != null) {
-            httpPost.addHeader("token", token);
-        }
-        httpPost.setEntity(new StringEntity(JSONObject.toJSONString(paramMap), "utf-8"));
-        try {
-            // httpClient对象执行post请求,并返回响应参数对象
-            httpResponse = httpClient.execute(httpPost);
-            // 从响应对象中获取响应内容
-            HttpEntity entity = httpResponse.getEntity();
-            result = EntityUtils.toString(entity);
-        } catch (IOException e) {
-            Log.e("ROOOR", e.getMessage());
-        } finally {
-            // 关闭资源
-            if (null != httpResponse) {
-                try {
-                    httpResponse.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return result;
-    }
+
 
     /**
      * 功能描述: get方法，访问目标地址，得到字符串返回值
@@ -128,48 +68,50 @@ public class HttpClient1 {
      * @date: 2019/8/29 11:38
      */
     public static String doGet(String url, String token) {
-//        CloseableHttpClient httpClient = null;
-        CloseableHttpResponse response = null;
-        String result = "";
+        String result = null;
+        Request.Builder builder = new Request.Builder().url(url);
+        if(!Strings.isNullOrEmpty(token)){
+            builder.header("token", token);
+        }
+        //发送请求
         try {
-            // 创建httpGet远程连接实例
-            HttpGet httpGet = new HttpGet(url);
-//            // 设置请求头信息，鉴权
-            if (token != null) {
-                httpGet.setHeader("token", token);
-            }
-            // 设置配置请求参数
-            RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(35000)// 连接主机服务超时时间
-                    .setConnectionRequestTimeout(35000)// 请求超时时间
-                    .setSocketTimeout(60000)// 数据读取超时时间
-                    .build();
-            // 为httpGet实例设置配置
-            httpGet.setConfig(requestConfig);
-            // 执行get请求得到返回对象
-            response = httpClient.execute(httpGet);
-            // 通过返回对象获取返回数据
-            HttpEntity entity = response.getEntity();
-            // 通过EntityUtils中的toString方法将结果转换为字符串
-            result = EntityUtils.toString(entity);
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
+            Response response = okhttp.newCall(builder.build()).execute();
+            //打印服务端传回的数据
+            result = response.body().string();
         } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            // 关闭资源
-            if (null != response) {
-                try {
-                    response.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            Log.i("ERROR", e.getMessage());
         }
         return result;
     }
 
 
     private static OkHttpClient okhttp = new OkHttpClient();
+
+    public static String doPost(String url, Map<String, Object> paramMap, String token) {
+        String result = null;
+        //创建一个RequestBody(参数1：数据类型 参数2传递的json串)
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), JSONObject.toJSONString(paramMap));
+        //创建一个请求对象
+        Request.Builder builder = new Request.Builder()
+                .url(url)
+                .post(requestBody);
+        if(!Strings.isNullOrEmpty(token)){
+            builder.header("token", token);
+        }
+        //发送请求获取响应
+        try {
+            Response response=okhttp.newCall(builder.build()).execute();
+            //判断请求是否成功
+            if(response.isSuccessful()){
+                //打印服务端返回结果
+                result =  response.body().string();
+            }
+        } catch (IOException e) {
+            Log.e("ERROR", e.getMessage());
+        }
+
+        return result;
+    }
 
     public static void upLoadImg(String url, String imgPath, final Handler handler, String token) {
         final String imageType = "multipart/form-data";

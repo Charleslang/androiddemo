@@ -70,7 +70,7 @@ public class LoginMainActivity extends AppCompatActivity implements View.OnClick
         String token = null;
         if(!(token = PersistenceToken.getToken(LoginMainActivity.this)).equals("")){
             ((MyApplication) getApplication()).setToken(token);
-//            Toast.makeText(LoginMainActivity.this, token, Toast.LENGTH_SHORT).show();
+            //调用接口进行登陆token验证有效性，有效直接登陆
             ThreadPoolExecutorService.add(new Runnable() {
                 @Override
                 public void run() {
@@ -145,9 +145,22 @@ public class LoginMainActivity extends AppCompatActivity implements View.OnClick
                                             public void run() {
                                                 String res = HttpClient1.doPost(getString(R.string.server_path) + getString(R.string.interface_user_login_qq), params);
                                                 JSONObject jsonObject2 = JSONObject.parseObject(res);
-                                                ((MyApplication) getApplication()).setToken(jsonObject2.get("datas") + "");
-                                                //持久化token
-                                                PersistenceToken.saveToken(LoginMainActivity.this, jsonObject2.get("datas") + "");
+                                                //发送消息登陆成功
+                                                Message message = new Message();
+                                                message.what = 0;
+                                                Bundle bundle = new Bundle();
+                                                if(jsonObject2.get("code").equals(200)){
+                                                    ((MyApplication) getApplication()).setToken(jsonObject2.get("datas") + "");
+                                                    //持久化token
+                                                    PersistenceToken.saveToken(LoginMainActivity.this, jsonObject2.get("datas") + "");
+
+                                                    bundle.putString("toast", "ok");
+                                                }else{
+                                                    bundle.putString("toast", jsonObject2.get("msg")+"");
+                                                }
+                                                message.setData(bundle);
+
+                                                myHandler.sendMessage(message);
                                             }
                                         });
                                     }

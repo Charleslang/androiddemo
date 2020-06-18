@@ -91,15 +91,15 @@ public class PersonalCenterAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     }
                 });
                 return personalCenterOrder1Holder;
+//            case 3:
+//                return new PersonalCenterWalletHolder(LayoutInflater.from(mContext).inflate(R.layout.layout_my_item, parent, false));
+//            case 4:
+//                return new PersonalCenterWalletHolder(LayoutInflater.from(mContext).inflate(R.layout.layout_my_item, parent, false));
+//            case 5:
+//                return new PersonalCenterWalletHolder(LayoutInflater.from(mContext).inflate(R.layout.layout_my_item, parent, false));
+//            case 6:
+//                return new PersonalCenterWalletHolder(LayoutInflater.from(mContext).inflate(R.layout.layout_my_item, parent, false));
             case 3:
-                return new PersonalCenterWalletHolder(LayoutInflater.from(mContext).inflate(R.layout.layout_my_item, parent, false));
-            case 4:
-                return new PersonalCenterWalletHolder(LayoutInflater.from(mContext).inflate(R.layout.layout_my_item, parent, false));
-            case 5:
-                return new PersonalCenterWalletHolder(LayoutInflater.from(mContext).inflate(R.layout.layout_my_item, parent, false));
-            case 6:
-                return new PersonalCenterWalletHolder(LayoutInflater.from(mContext).inflate(R.layout.layout_my_item, parent, false));
-            case 7:
                 return new PersonalCenterAddressHolder(LayoutInflater.from(mContext).inflate(R.layout.layout_personal_center_address, parent, false));
             default:
                 return new PersonalCenterHeaderHolder(LayoutInflater.from(mContext).inflate(R.layout.layout_my_header, parent, false));
@@ -180,27 +180,27 @@ public class PersonalCenterAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             case 2:
                 //订单部分，在初始化时设置了，所以在这里没有考虑
                 break;
+//            case 3:
+//                PersonalCenterWalletHolder personalCenterWalletHolder = (PersonalCenterWalletHolder) holder;
+//                personalCenterWalletHolder.getPersonal_center_my_item_image().setImageResource(R.drawable.ic_wallet);
+//                personalCenterWalletHolder.getPersonal_center_my_item_text().setText("我的钱包");
+//                break;
+//            case 4:
+//                PersonalCenterWalletHolder personalCenterWalletHolder2 = (PersonalCenterWalletHolder) holder;
+//                personalCenterWalletHolder2.getPersonal_center_my_item_image().setImageResource(R.drawable.ic_authentication);
+//                personalCenterWalletHolder2.getPersonal_center_my_item_text().setText("认证中心");
+//                break;
+//            case 5:
+//                PersonalCenterWalletHolder personalCenterWalletHolder3 = (PersonalCenterWalletHolder) holder;
+//                personalCenterWalletHolder3.getPersonal_center_my_item_image().setImageResource(R.drawable.ic_inform);
+//                personalCenterWalletHolder3.getPersonal_center_my_item_text().setText("系统设置");
+//                break;
+//            case 6:
+//                PersonalCenterWalletHolder personalCenterWalletHolder4 = (PersonalCenterWalletHolder) holder;
+//                personalCenterWalletHolder4.getPersonal_center_my_item_image().setImageResource(R.drawable.ic_set);
+//                personalCenterWalletHolder4.getPersonal_center_my_item_text().setText("安全与设置");
+//                break;
             case 3:
-                PersonalCenterWalletHolder personalCenterWalletHolder = (PersonalCenterWalletHolder) holder;
-                personalCenterWalletHolder.getPersonal_center_my_item_image().setImageResource(R.drawable.ic_wallet);
-                personalCenterWalletHolder.getPersonal_center_my_item_text().setText("我的钱包");
-                break;
-            case 4:
-                PersonalCenterWalletHolder personalCenterWalletHolder2 = (PersonalCenterWalletHolder) holder;
-                personalCenterWalletHolder2.getPersonal_center_my_item_image().setImageResource(R.drawable.ic_authentication);
-                personalCenterWalletHolder2.getPersonal_center_my_item_text().setText("认证中心");
-                break;
-            case 5:
-                PersonalCenterWalletHolder personalCenterWalletHolder3 = (PersonalCenterWalletHolder) holder;
-                personalCenterWalletHolder3.getPersonal_center_my_item_image().setImageResource(R.drawable.ic_inform);
-                personalCenterWalletHolder3.getPersonal_center_my_item_text().setText("系统设置");
-                break;
-            case 6:
-                PersonalCenterWalletHolder personalCenterWalletHolder4 = (PersonalCenterWalletHolder) holder;
-                personalCenterWalletHolder4.getPersonal_center_my_item_image().setImageResource(R.drawable.ic_set);
-                personalCenterWalletHolder4.getPersonal_center_my_item_text().setText("安全与设置");
-                break;
-            case 7:
                 PersonalCenterAddressHolder personalCenterAddressHolder = (PersonalCenterAddressHolder) holder;
                 personalCenterAddressHolder.getPersonal_center_address().setText("我的地址");
                 personalCenterAddressHolder.getPersonal_center_address().setOnClickListener(new View.OnClickListener() {

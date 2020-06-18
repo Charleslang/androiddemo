@@ -163,7 +163,7 @@ public class PersonalCenterFragment extends Fragment {
 
 
 
-                    personalCenterAdapter = new PersonalCenterAdapter(getContext(), 8, mParams,pop_up_to_modify,myHandler,((MyApplication) getActivity().getApplication()).getToken());
+                    personalCenterAdapter = new PersonalCenterAdapter(getContext(), 4, mParams,pop_up_to_modify,myHandler,((MyApplication) getActivity().getApplication()).getToken());
                     personal_center_recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                     personal_center_recyclerView.setAdapter(personalCenterAdapter);
                     break;
