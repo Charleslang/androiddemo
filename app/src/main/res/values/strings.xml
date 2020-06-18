@@ -31,6 +31,7 @@
     <string name="interface_user_login">/users/login</string>
     <string name="interface_user_logout">/users/logout</string>
     <string name="interface_user_register">/users/register</string>
+    <string name="interface_user_forget">/users/forget</string>
     <string name="interface_user_info">/users/info</string>
     <string name="interface_user_info_update">/users/info/update</string>
     <string name="interface_files_upload">/files/upload</string>

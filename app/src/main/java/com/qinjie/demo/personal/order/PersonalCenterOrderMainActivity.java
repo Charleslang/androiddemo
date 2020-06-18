@@ -17,14 +17,27 @@ import com.library.tabstrip.PagerSlidingTabStrip;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+  * 个人中心订单主页面
+  *
+  * @author:
+ **/
 public class PersonalCenterOrderMainActivity extends AppCompatActivity {
     /**
      * ViewPage
      */
     private ViewPager personal_center_order_fragment;
+    /**
+     * 返回的图标
+     */
     private ImageView personal_center_order_return;
+    /**
+     * 上部滑动
+     */
     private PagerSlidingTabStrip personal_center_order_status;
+    /**
+     * 刷新
+     */
     private SwipeRefreshLayout personal_center_order_swipeRefreshLayout;
 
     /**
@@ -94,7 +107,6 @@ public class PersonalCenterOrderMainActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-//                        personal_center_swipeRefreshLayout.
                         personal_center_order_swipeRefreshLayout.setRefreshing(false);
                         Toast.makeText(PersonalCenterOrderMainActivity.this, "上拉刷新完成", Toast.LENGTH_SHORT).show();
                         //设置fragment的list
@@ -109,8 +121,6 @@ public class PersonalCenterOrderMainActivity extends AppCompatActivity {
 
                         //设置适配器
                         personal_center_order_fragment.setAdapter(new TextAdapter(getSupportFragmentManager(), titles, fragmentList));
-
-//                        getFragmentManager().getFragments()
                     }
                 }, 2000);
             }

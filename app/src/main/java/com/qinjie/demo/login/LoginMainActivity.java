@@ -96,7 +96,8 @@ public class LoginMainActivity extends AppCompatActivity implements View.OnClick
         login_edittext_email = findViewById(R.id.login_edittext_email);
         login_main_button_login = findViewById(R.id.login_main_button_login);
         login_main_image_qq = findViewById(R.id.login_main_image_qq);
-        login_main_image_wechat = findViewById(R.id.login_main_image_wechat);
+        login_main_text_forget = findViewById(R.id.login_main_text_forgot);
+//        login_main_image_wechat = findViewById(R.id.login_main_image_wechat);
         login_main_text_register = findViewById(R.id.login_main_text_register);
         login_main_text_register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +106,14 @@ public class LoginMainActivity extends AppCompatActivity implements View.OnClick
                 startActivity(intent);
             }
         });
-
+        //忘记密码
+        login_main_text_forget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginMainActivity.this, ForgetPasswordActivity.class);
+                startActivity(intent);
+            }
+        });
 
         login_main_button_login.setOnClickListener(this);
 
@@ -147,13 +155,12 @@ public class LoginMainActivity extends AppCompatActivity implements View.OnClick
                                                 JSONObject jsonObject2 = JSONObject.parseObject(res);
                                                 //发送消息登陆成功
                                                 Message message = new Message();
-                                                message.what = 0;
                                                 Bundle bundle = new Bundle();
                                                 if(jsonObject2.get("code").equals(200)){
-                                                    ((MyApplication) getApplication()).setToken(jsonObject2.get("datas") + "");
+                                                    message.what = 3;
                                                     //持久化token
                                                     PersistenceToken.saveToken(LoginMainActivity.this, jsonObject2.get("datas") + "");
-
+                                                    ((MyApplication) getApplication()).setToken(jsonObject2.get("datas") + "");
                                                     bundle.putString("toast", "ok");
                                                 }else{
                                                     bundle.putString("toast", jsonObject2.get("msg")+"");
@@ -275,6 +282,9 @@ public class LoginMainActivity extends AppCompatActivity implements View.OnClick
                     break;
                 case 2: //自动登陆时token到期
 
+                    break;
+                case 3:
+                    //qq登陆成功
                     break;
                 default:
                     break;

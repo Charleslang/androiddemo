@@ -35,6 +35,9 @@ public class PersonalCenterOrderPage extends Fragment {
      * listview，订单列表
      */
     private ListView personal_center_order_page_list;
+    /**
+     * 上下文
+     */
     private Context mContext;
     /**
      * 订单状态,1-已支付，0-未支付
@@ -51,12 +54,15 @@ public class PersonalCenterOrderPage extends Fragment {
                              Bundle savedInstanceState) {
 
         View re = inflater.inflate(R.layout.fragment_personal_center_order_page, container, false);
+        //订单列表对象
         personal_center_order_page_list = re.findViewById(R.id.personal_center_order_page_list);
+        //新线程调用接口返回订单列表
         ThreadPoolExecutorService.add(new Runnable() {
             @Override
             public void run() {
                 String res = HttpClient1.doGet(getString(R.string.server_path) + getString(R.string.interface_users_orders)+"?orderStatus="+mOrderStatus+"&pageNum=1&pageSize=100", ((MyApplication) getActivity().getApplication()).getToken());
                 JSONObject jsonObject = JSONObject.parseObject(res);
+                //消息
                 Message message = new Message();
                 Bundle bundle = new Bundle();
                 if(jsonObject.get("code").equals(200)){

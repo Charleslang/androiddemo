@@ -2,79 +2,52 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dysy.carttest">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 更改wifi连状态 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 获取wifi状态 -->
-    <uses-permission android:name="android.permission.ACCESS_GPS" /> <!-- 允许程序读写手机状态和身份 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
     <application
         android:name="com.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:networkSecurityConfig="@xml/network_config"
         android:theme="@style/AppTheme">
-        <activity android:name=".ReadyPayActivity">
-
+        <activity android:name="com.qinjie.demo.login.ForgetPasswordActivity">
         </activity>
-        <activity android:name=".OrderActivity">
-        </activity>
+        <activity android:name=".ReadyPayActivity"></activity>
+        <activity android:name=".OrderActivity"></activity>
         <activity android:name=".CommentActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".ShoppingCartActivity"></activity>
+        <activity
+            android:name=".pay.PayDemoActivity"
+            android:icon="@drawable/msp_icon"
+            android:label="@string/app_name">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".pay.H5PayDemoActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind"></activity> <!-- qinjie -->
+        <activity android:name="com.qinjie.demo.login.RegisterMainActivity">
+
 
         </activity>
-
-        <activity android:name=".ShoppingCartActivity">
+        <activity android:name="com.qinjie.demo.personal.address.PersonalCenterAddressEditActivity" />
+        <activity android:name="com.qinjie.demo.personal.address.PersonalCenterAddressMainActivity" />
+        <activity android:name="com.qinjie.demo.personal.order.PersonalCenterOrderMainActivity" />
+        <activity android:name="com.qinjie.demo.login.LoginMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="com.dysy.carttest.pay.PayDemoActivity"
-            android:icon="@drawable/msp_icon"
-            android:label="@string/app_name" >
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-        </activity>
-        <activity
-            android:name="com.dysy.carttest.pay.H5PayDemoActivity"
-            android:configChanges="orientation|keyboardHidden|navigation"
-            android:exported="false"
-            android:screenOrientation="behind" >
-        </activity>
-
-
-
-
-
-
-
-
-
-
-<!--        qinjie-->
-        <activity android:name="com.qinjie.demo.personal.address.PersonalCenterAddressEditActivity" />
-        <activity android:name="com.qinjie.demo.personal.address.PersonalCenterAddressMainActivity" />
-        <activity android:name="com.qinjie.demo.personal.order.PersonalCenterOrderMainActivity" />
-        <activity android:name="com.qinjie.demo.login.LoginMainActivity" >
-
-
         </activity>
         <activity
             android:name="com.tencent.tauth.AuthActivity"
@@ -103,7 +76,19 @@
         <uses-library
             android:name="com.google.android.things"
             android:required="false" />
+    </application> <!-- 更改wifi连状态 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 获取wifi状态 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 允许程序读写手机状态和身份 -->
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-    </application>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 </manifest>
