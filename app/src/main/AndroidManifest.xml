@@ -20,54 +20,45 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:networkSecurityConfig="@xml/network_config"
         android:theme="@style/AppTheme">
-        <activity android:name=".UserPayResultActivity">
-
+        <activity android:name=".ShopMainActivity">
         </activity>
-        <activity android:name=".ReadyPayActivity"></activity>
-        <activity android:name=".OrderActivity"></activity>
+        <activity android:name=".UserPayResultActivity"></activity>
+        <activity android:name=".ReadyPayActivity" />
+        <activity android:name=".OrderActivity" />
         <activity android:name=".CommentActivity" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".ShoppingCartActivity">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".pay.PayDemoActivity"
             android:icon="@drawable/msp_icon"
-            android:label="@string/app_name" >
-        </activity>
+            android:label="@string/app_name"></activity>
         <activity
             android:name=".pay.H5PayDemoActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind" >
-        </activity>
-
-
-
-
-<!--        qinjie-->
-        <activity android:name="com.qinjie.demo.login.ForgetPasswordActivity">
-        </activity>
-        <activity android:name="com.qinjie.demo.login.RegisterMainActivity">
-        </activity>
+            android:screenOrientation="behind"></activity> <!-- qinjie -->
+        <activity android:name="com.qinjie.demo.login.ForgetPasswordActivity"></activity>
+        <activity android:name="com.qinjie.demo.login.RegisterMainActivity"></activity>
         <activity android:name="com.qinjie.demo.personal.address.PersonalCenterAddressEditActivity" />
         <activity android:name="com.qinjie.demo.personal.address.PersonalCenterAddressMainActivity" />
         <activity android:name="com.qinjie.demo.personal.order.PersonalCenterOrderMainActivity" />
-        <activity android:name="com.qinjie.demo.login.LoginMainActivity" >
+        <activity android:name="com.qinjie.demo.login.LoginMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name="com.tencent.tauth.AuthActivity"
@@ -96,7 +87,6 @@
         <uses-library
             android:name="com.google.android.things"
             android:required="false" />
-
     </application>
 
 </manifest>
