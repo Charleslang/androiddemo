@@ -31,12 +31,14 @@
     <string name="interface_user_login">/users/login</string>
     <string name="interface_user_logout">/users/logout</string>
     <string name="interface_user_register">/users/register</string>
+    <string name="interface_user_forget">/users/forget</string>
     <string name="interface_user_info">/users/info</string>
     <string name="interface_user_info_update">/users/info/update</string>
     <string name="interface_files_upload">/files/upload</string>
     <string name="interface_users_addresses">/users/addresses</string>
     <string name="interface_users_addresses_default">/users/addresses/default</string>
     <string name="interface_users_orders">/users/orders</string>
+    <string name="interface_users_validate">/users/validate</string>
     <string name="title_activity_personal_order_main">PersonalOrderMainActivity</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>

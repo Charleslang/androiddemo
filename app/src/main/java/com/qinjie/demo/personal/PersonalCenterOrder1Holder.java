@@ -26,14 +26,14 @@ public class PersonalCenterOrder1Holder extends RecyclerView.ViewHolder {
         super(itemView);
         //得到两个对象
         personal_center_all_my_order = itemView.findViewById(R.id.personal_center_all_my_order);
-        personal_center_my_order_recyclerView = itemView.findViewById(R.id.personal_center_my_order_recyclerView);
+//        personal_center_my_order_recyclerView = itemView.findViewById(R.id.personal_center_my_order_recyclerView);
         //设置布局水平滑动
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(itemView.getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        personal_center_my_order_recyclerView.setLayoutManager(linearLayoutManager);
+//        personal_center_my_order_recyclerView.setLayoutManager(linearLayoutManager);
 
         //设置RecyclerView的适配器
-        personal_center_my_order_recyclerView.setAdapter(new PersonalCenterOrder1HolderAdapter(itemView.getContext(), names, nums));
+//        personal_center_my_order_recyclerView.setAdapter(new PersonalCenterOrder1HolderAdapter(itemView.getContext(), names, nums));
 
 
     }

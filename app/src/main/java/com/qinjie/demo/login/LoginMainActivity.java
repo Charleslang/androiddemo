@@ -16,10 +16,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.MyApplication;
 import com.alibaba.fastjson.JSONObject;
 import com.dysy.carttest.R;
 import com.qinjie.demo.main.MainMainActivity;
-import com.MyApplication;
 import com.qinjie.demo.utils.HttpClient1;
 import com.qinjie.demo.utils.PersistenceToken;
 import com.qinjie.demo.utils.ThreadPoolExecutorService;
@@ -70,9 +70,18 @@ public class LoginMainActivity extends AppCompatActivity implements View.OnClick
         String token = null;
         if(!(token = PersistenceToken.getToken(LoginMainActivity.this)).equals("")){
             ((MyApplication) getApplication()).setToken(token);
-            Toast.makeText(LoginMainActivity.this, token, Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(LoginMainActivity.this, MainMainActivity.class);
-            startActivity(intent);
+            //调用接口进行登陆token验证有效性，有效直接登陆
+            ThreadPoolExecutorService.add(new Runnable() {
+                @Override
+                public void run() {
+                    String res = HttpClient1.doGet(getString(R.string.server_path) + getString(R.string.interface_users_validate),  ((MyApplication) getApplication()).getToken());
+                    JSONObject jsonObject = JSONObject.parseObject(res);
+                    if(jsonObject.get("code").equals(200)){
+                        Intent intent = new Intent(LoginMainActivity.this, MainMainActivity.class);
+                        startActivity(intent);
+                    }
+                }
+            });
         }
 
         super.onCreate(savedInstanceState);
@@ -87,7 +96,8 @@ public class LoginMainActivity extends AppCompatActivity implements View.OnClick
         login_edittext_email = findViewById(R.id.login_edittext_email);
         login_main_button_login = findViewById(R.id.login_main_button_login);
         login_main_image_qq = findViewById(R.id.login_main_image_qq);
-        login_main_image_wechat = findViewById(R.id.login_main_image_wechat);
+        login_main_text_forget = findViewById(R.id.login_main_text_forgot);
+//        login_main_image_wechat = findViewById(R.id.login_main_image_wechat);
         login_main_text_register = findViewById(R.id.login_main_text_register);
         login_main_text_register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +106,14 @@ public class LoginMainActivity extends AppCompatActivity implements View.OnClick
                 startActivity(intent);
             }
         });
-
+        //忘记密码
+        login_main_text_forget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginMainActivity.this, ForgetPasswordActivity.class);
+                startActivity(intent);
+            }
+        });
 
         login_main_button_login.setOnClickListener(this);
 
@@ -136,9 +153,21 @@ public class LoginMainActivity extends AppCompatActivity implements View.OnClick
                                             public void run() {
                                                 String res = HttpClient1.doPost(getString(R.string.server_path) + getString(R.string.interface_user_login_qq), params);
                                                 JSONObject jsonObject2 = JSONObject.parseObject(res);
-                                                ((MyApplication) getApplication()).setToken(jsonObject2.get("datas") + "");
-                                                //持久化token
-                                                PersistenceToken.saveToken(LoginMainActivity.this, jsonObject2.get("datas") + "");
+                                                //发送消息登陆成功
+                                                Message message = new Message();
+                                                Bundle bundle = new Bundle();
+                                                if(jsonObject2.get("code").equals(200)){
+                                                    message.what = 3;
+                                                    //持久化token
+                                                    PersistenceToken.saveToken(LoginMainActivity.this, jsonObject2.get("datas") + "");
+                                                    ((MyApplication) getApplication()).setToken(jsonObject2.get("datas") + "");
+                                                    bundle.putString("toast", "ok");
+                                                }else{
+                                                    bundle.putString("toast", jsonObject2.get("msg")+"");
+                                                }
+                                                message.setData(bundle);
+
+                                                myHandler.sendMessage(message);
                                             }
                                         });
                                     }
@@ -250,6 +279,12 @@ public class LoginMainActivity extends AppCompatActivity implements View.OnClick
                     String toast1 = ""+msg.getData().get("toast");
                     Toast.makeText(LoginMainActivity.this, toast1, Toast.LENGTH_SHORT).show();
 
+                    break;
+                case 2: //自动登陆时token到期
+
+                    break;
+                case 3:
+                    //qq登陆成功
                     break;
                 default:
                     break;

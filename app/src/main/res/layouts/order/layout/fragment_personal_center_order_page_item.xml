@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:foreground="?android:attr/selectableItemBackground"
@@ -26,35 +26,11 @@
             />
 
     </RelativeLayout>
-    <LinearLayout
+
+    <ListView
+        android:id="@+id/personal_center_order_page_list_goods"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#F5F5F5"
-        >
-        <ImageView
-            android:id="@+id/personal_center_order_page_list_goods_images"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/ic_wallet"
-            android:layout_margin="10dp"
-            />
-        <TextView
-            android:id="@+id/personal_center_order_page_list_goods_name"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="四川移动话费充值20元"
-            android:layout_margin="10dp"
-            />
-        <TextView
-            android:id="@+id/personal_center_order_page_list_goods_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:layout_margin="10dp"
-            android:text="$200"
-            />
-    </LinearLayout>
+        android:layout_height="316dp" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -83,7 +59,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="删除订单"
+                android:visibility="invisible"
                 android:background=" #FFFFFF"
+                android:textSize="20sp"/>
+            <Button
+                android:id="@+id/personal_center_order_page_list_button_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_edge"
+                android:text="支付"
+                android:visibility="invisible"
+                android:textColor="#FF5722"
                 android:textSize="20sp"/>
         </LinearLayout>
     </LinearLayout>

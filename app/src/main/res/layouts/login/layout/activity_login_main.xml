@@ -76,12 +76,12 @@
             android:layout_width="55dip"
             android:layout_height="55dip"
             android:src="@drawable/ic_qq" />
-        <ImageView
-            android:id="@+id/login_main_image_wechat"
-            android:layout_marginLeft="30dp"
-            android:layout_width="55dip"
-            android:layout_height="55dip"
-            android:src="@drawable/ic_wechat" />
+<!--        <ImageView-->
+<!--            android:id="@+id/login_main_image_wechat"-->
+<!--            android:layout_marginLeft="30dp"-->
+<!--            android:layout_width="55dip"-->
+<!--            android:layout_height="55dip"-->
+<!--            android:src="@drawable/ic_wechat" />-->
     </LinearLayout>
 
 </LinearLayout>
