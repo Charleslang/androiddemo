@@ -75,7 +75,8 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
 
     private NumberFormat nf;
     private Handler mHanlder;
-    private TextView shoppingBackBtn, shoppingCommentBtn;
+    private TextView shoppingCommentBtn;
+    private ImageView shoppingBackBtn;
 
     private OkHttpClient okHttpClient = new OkHttpClient();
     private double cost = 0;
@@ -232,7 +233,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
                 clearCart();
                 break;
             case R.id.tvSubmit:
-                Toast.makeText(ShoppingCartActivity.this, "结算", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(ShoppingCartActivity.this, "结算", Toast.LENGTH_SHORT).show();
                 intent = new Intent(ShoppingCartActivity.this, OrderActivity.class);
                 Map<String, Object> map = new HashMap<>();
                 map.put("goodsList", selectedList);

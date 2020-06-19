@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +39,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class OrderActivity extends AppCompatActivity {
-    private TextView orderBack;
+    private ImageView orderBack;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private OrderItemAdapter orderItemAdapter;
@@ -89,6 +90,7 @@ public class OrderActivity extends AppCompatActivity {
         orderTopContent.getPaint().setFakeBoldText(true);
         orderPaymoney.getPaint().setFakeBoldText(true);
         orderSubmit.getPaint().setFakeBoldText(true);
+        orderBpaymoney.getPaint().setFakeBoldText(true);
 
         orderBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +106,7 @@ public class OrderActivity extends AppCompatActivity {
                 String userTel = orderTel.getText().toString();
                 String userAddr = orderLocation.getText().toString();
                 if ("".equals(userName) || "".equals(userTel) || "".equals(userAddr)) {
-                    Toast.makeText(OrderActivity.this,"请完善地址信息",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(OrderActivity.this,"请完善收货地址",Toast.LENGTH_SHORT).show();
                 } else {
                     creatOrder();
                     new Thread(new Runnable() {

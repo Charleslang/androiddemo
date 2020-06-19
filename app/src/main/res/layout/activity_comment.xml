@@ -9,13 +9,12 @@
         android:layout_height="60dp"
         android:background="@drawable/top_title"
         android:layout_marginBottom="20dp">
-        <TextView
+        <ImageView
             android:id="@+id/comment_back"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:text="返回"
-            android:textSize="15sp"
-            android:gravity="center"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/leftw"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"/>
         <TextView
@@ -23,6 +22,7 @@
             android:layout_height="match_parent"
             android:text="店铺评论"
             android:textSize="16sp"
+            android:textColor="#ffffff"
             android:gravity="center"
             android:layout_centerInParent="true"/>
     </RelativeLayout>
