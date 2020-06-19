@@ -1,6 +1,7 @@
 package com.qinjie.demo.personal.order;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dysy.carttest.R;
+import com.dysy.carttest.ShoppingCartActivity;
 
 import java.util.List;
 
@@ -61,6 +63,13 @@ public class PersonalCenterOrderPageGoodsAdapter extends BaseAdapter {
         viewHolde.personal_center_order_page_list_goods_name.setText(goodsInfo.get(position).getGoodsName());
         viewHolde.personal_center_order_page_list_goods_price.setText(goodsInfo.get(position).getGoodsPrice());
         Glide.with(mContext).load(goodsInfo.get(position).getGoodsImage()).into(viewHolde.personal_center_order_page_list_goods_images);
+        viewHolde.personal_center_order_page_list_goods_images.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(mContext, ShoppingCartActivity.class);
+                mContext.startActivity(in);
+            }
+        });
         viewHolde.personal_center_order_page_list_goods_num.setText("X "+goodsInfo.get(position).getGoodsNum());
 
         return convertView;
