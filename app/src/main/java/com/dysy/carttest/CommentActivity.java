@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dysy.carttest.adapter.CommentRecycleViewAdapter;
@@ -19,7 +20,7 @@ public class CommentActivity extends AppCompatActivity {
     private CommentRecycleViewAdapter adapter;
     private List<String> commentList = new ArrayList<>();
 
-    private TextView commentBack;
+    private ImageView commentBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
