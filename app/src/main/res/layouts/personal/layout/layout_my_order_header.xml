@@ -28,9 +28,9 @@
             android:drawableRight="@drawable/ic_arrow_right"
             />
     </LinearLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/personal_center_my_order_recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/personal_center_my_order_recyclerView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"/>-->
 
 </LinearLayout>
