@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
@@ -16,9 +17,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.MyApplication;
 import com.dysy.carttest.adapter.OrderItemAdapter;
 import com.dysy.carttest.dto.GoodsDTO;
 import com.dysy.carttest.dto.InsertOrderDTO;
+import com.dysy.carttest.dto.OrderAddressDTO;
 import com.dysy.carttest.dto.OrderDetailsDTO;
 import com.dysy.carttest.util.MyBigDecimal;
 import com.dysy.carttest.util.OkHttpCallback;
@@ -52,6 +55,20 @@ public class OrderActivity extends AppCompatActivity {
     private InsertOrderDTO insertOrderDTO;
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     OkHttpClient okHttpClient = new OkHttpClient();
+    private OrderAddressDTO addressDTO;
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+//                    initView();
+                    addressDTO = (OrderAddressDTO) msg.obj;
+                    initView();
+                    break;
+            }
+        }
+    };
 
 
     @Override
@@ -63,6 +80,7 @@ public class OrderActivity extends AppCompatActivity {
 
         initDate();
         initView();
+//        getAddress(((MyApplication) getApplication()).getToken());
     }
 
     public void initView(){
@@ -86,6 +104,10 @@ public class OrderActivity extends AppCompatActivity {
         orderOrder.setText("订单" + nf.format(cost + 2));
         orderPaymoney.setText("待支付" + nf.format(cost + 2));
         orderBpaymoney.setText("待支付" + nf.format(cost + 2));
+        //新增
+//        orderLocation.setText(addressDTO.getaDetails());
+//        orderName.setText(addressDTO.getaUsername());
+//        orderTel.setText(addressDTO.getaPhone());
 
         orderTopContent.getPaint().setFakeBoldText(true);
         orderPaymoney.getPaint().setFakeBoldText(true);
@@ -172,5 +194,39 @@ public class OrderActivity extends AppCompatActivity {
                 orderLocation.getText().toString(),
                 "零食店铺(成信大店)",
                 null,orderDetailsDTOList);
+//        insertOrderDTO = new InsertOrderDTO(price, addressDTO.getaUserId(),1,orderName.getText().toString(),
+//                orderLocation.getText().toString(),
+//                "零食店铺(成信大店)",
+//                null,orderDetailsDTOList);
     }
+
+
+    //新增查询收货地址
+    public void getAddress(final String token){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Request request = new Request.Builder()
+                        .url("http://192.168.43.131:8080/GCSJProject/order/addr")
+                        .get()
+                        .addHeader("token", token)
+                        .build();
+                try (Response response = okHttpClient.newCall(request).execute()){
+                    Gson gson = new Gson();
+                    OrderAddressDTO addressDTO = gson.fromJson(response.body().string().toString(), OrderAddressDTO.class);
+                    if (addressDTO != null) {
+                        Log.d("地址信息----------", addressDTO.toString());
+                        Message message = new Message();
+                        message.what = 1;
+                        message.obj = addressDTO;
+                        mHandler.sendMessage(message);
+                    }
+                    Log.d("地址信息-----","为空NULL");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
 }
