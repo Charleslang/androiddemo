@@ -117,7 +117,9 @@ public class GoodsAdapter extends BaseAdapter implements StickyListHeadersAdapte
             item.setSelectNum(mContext.getSelectedItemCountById(item.getgId()));
             tvCount.setText(String.valueOf(item.getSelectNum()));
             price.setText(nf.format(item.getgPrice()));
-            Glide.with(mContext).load("https://img14.360buyimg.com/n7/jfs/t1/111421/35/8291/241351/5eccf389E9337c640/3c6fdabf0d9502f7.jpg").centerCrop().into(img);
+            if (item.getgPhoto() != null && !"".equals(item.getgPhoto())) {
+                Glide.with(mContext).load("http://101.200.166.167/GCSJProject/images/" + item.getgPhoto()).centerCrop().into(img);
+            }
             if(item.getSelectNum()<1){
                 tvCount.setVisibility(View.GONE);
                 tvMinus.setVisibility(View.GONE);

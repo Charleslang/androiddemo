@@ -242,7 +242,8 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
                 startActivity(intent);
                 break;
             case R.id.shopping_back_btn:
-                Toast.makeText(ShoppingCartActivity.this, "返回", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(ShoppingCartActivity.this, "返回", Toast.LENGTH_SHORT).show();
+                finish();
                 break;
             case R.id.shopping_comment_btn:
                 intent = new Intent(ShoppingCartActivity.this, CommentActivity.class);
@@ -409,7 +410,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
     }
 
     public void getAllGoods(){
-        OkHttpUtil.get("http://192.168.43.131:8080/GCSJProject/goods/goods", new OkHttpCallback(){
+        OkHttpUtil.get(getString(R.string.server_path_djf) + "/goods/goods", new OkHttpCallback(){
             @Override
             public void onFinish(String status, String mes) {
                 Gson gson = new Gson();
@@ -432,36 +433,4 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
             }
         });
     }
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Request request = new Request.Builder()
-//                        .url("http://192.168.43.131:8080/GCSJProject/goods/goods")
-//                        .get()
-//                        .build();
-//                try (Response response = okHttpClient.newCall(request).execute()){
-//                    Gson gson = new Gson();
-//                    List<TbGoodsType> list = gson.fromJson(response.body().string().toString(), new TypeToken<List<TbGoodsType>>() {
-//                    }.getType());
-//                    if (!list.isEmpty()) {
-//                        for (TbGoodsType tbGoodsType : list) {
-//                            GoodsTypeDTO goodsTypeDTO = new GoodsTypeDTO(tbGoodsType.getTypeId(), tbGoodsType.getTypeName());
-//                            for (GoodsDTO goodsDTO : tbGoodsType.getTbGoodsList()) {
-//                                GoodsDTO goods = new GoodsDTO(goodsDTO.getgId(), goodsDTO.getgName(), goodsDTO.getgPrice(),
-//                                        goodsDTO.getSelectNum(), goodsDTO.getgPhoto(), goodsDTO.getTbGoodsType());
-//                                dataList.add(goods);
-//                            }
-//                            typeList.add(goodsTypeDTO);
-//                        }
-//                        Message message = new Message();
-//                        message.what = 1;
-//                        mHandler.sendMessage(message);
-//                    }
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-//    }
 }

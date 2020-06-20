@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">carttest</string>
+    <string name="app_name">零食店铺</string>
 <!--    支付宝-->
     <string name="demo_info_text">重要说明: \n\n本 Demo 为了方便向商户展示支付宝的支付流程，所以订单信息的加签过程放在客户端完成。\n在商户的真实App内，为了防止商户私密数据泄露，引发资金损失和身份冒用等各种安全风险，商户私钥 RSA_PRIVATE 等数据严禁放在客户端，订单信息的加签过程也务必放在服务端完成。\n若商户接入时不遵照此说明而造成损失，需自行承担。</string>
     <string name="pay_with_alipay">支付宝支付 Demo</string>
@@ -23,10 +23,12 @@
     <string name="error_missing_global_partner_seller_rsa_private" >错误：需要配置 OrderUtils1_0_Global 中的 PARTNER、SELLER 和 RSA_PRIVATE</string>
     <string name="payment_inst_hk">付款方: HK</string>
     <string name="payment_inst_cn">付款方: CN</string>
-
+<!-- Dai Junfeng-->
+    <string name="server_path_djf">http://101.200.166.167/GCSJProject</string>
+    <string name="server_path_img">http://101.200.166.167/GCSJProject/images</string>
 <!--    qinjie-->
     <string name="server_path">http://139.9.87.17:8081/CampusShops</string>
-    <!--    <string name="server_path">http://192.168.43.207:8080/CampusShops</string>-->
+<!--    <string name="server_path">http://192.168.43.207:8080/CampusShops</string>-->
     <string name="interface_user_login_qq">/users/loginQQ</string>
     <string name="interface_user_login">/users/login</string>
     <string name="interface_user_logout">/users/logout</string>

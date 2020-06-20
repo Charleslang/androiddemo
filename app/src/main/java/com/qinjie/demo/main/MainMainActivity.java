@@ -12,6 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 
 
 import com.dysy.carttest.R;
+import com.qinjie.demo.home.HomePageFragment;
 import com.qinjie.demo.personal.PersonalCenterFragment;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class MainMainActivity extends AppCompatActivity {
         mTabRadioGroup = findViewById(R.id.tabs_rg);
         // init fragment
         mFragments = new ArrayList<>(4);
-        mFragments.add(new BlankFragment());
+        mFragments.add(new HomePageFragment());
         mFragments.add(new BlankFragment());
         mFragments.add(new BlankFragment());
         mFragments.add(new PersonalCenterFragment());

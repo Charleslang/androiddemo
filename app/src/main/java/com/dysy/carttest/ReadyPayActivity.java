@@ -148,7 +148,7 @@ public class ReadyPayActivity extends AppCompatActivity {
 
         cost = getIntent().getDoubleExtra("cost", 0);
         orderId = getIntent().getIntExtra("orderId",0);
-        Log.d("支付界面收到的id->",orderId + "********************");
+//        Log.d("支付界面收到的id->",orderId + "********************");
         costStr = nf.format(cost);
 
         readyPayTime.getPaint().setFakeBoldText(true);
@@ -162,7 +162,7 @@ public class ReadyPayActivity extends AppCompatActivity {
         readyPayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OkHttpUtil.get("http://192.168.43.131:8080/GCSJProject/alipay/pay?orderId=" + orderId,new OkHttpCallback(){
+                OkHttpUtil.get(getString(R.string.server_path_djf) + "/alipay/pay?orderId=" + orderId,new OkHttpCallback(){
                     @Override
                     public void onFinish(String status, String mes) {
 //                        Gson gson = new Gson();
