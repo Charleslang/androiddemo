@@ -1,6 +1,7 @@
 package com.qinjie.demo.personal.order;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 
 import com.dysy.carttest.R;
+import com.dysy.carttest.ReadyPayActivity;
 
 import java.util.List;
 
@@ -92,8 +94,19 @@ public class PersonalCenterOrderPageAdapter extends BaseAdapter {
         viewHolde.personal_center_order_page_list_goods_goods_num_total_price.setText("共计"+mOrderInfoList.get(position).getGoodsNum()+"件商品，合计"+mOrderInfoList.get(position).getTotalPrice()+"元");
         viewHolde.personal_center_order_page_list_store.setText(mOrderInfoList.get(position).getStoreName());
         viewHolde.personal_center_order_page_list_order_status.setText(mOrderInfoList.get(position).getOrderStatus());
+        final double cost = Double.valueOf(mOrderInfoList.get(position).getTotalPrice());
+        final int orderId  = mOrderInfoList.get(position).getOrderId();
         if(mOrderInfoList.get(position).getOrderStatus().equals("未支付")){
             viewHolde.personal_center_order_page_list_button_pay.setVisibility(View.VISIBLE);
+            viewHolde.personal_center_order_page_list_button_pay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, ReadyPayActivity.class);
+                    intent.putExtra("cost", cost) ;
+                    intent.putExtra("orderId",orderId);
+                    mContext.startActivity(intent);
+                }
+            });
         }
 //        else if(mOrderInfoList.get(position).getOrderStatus().equals("已支付")){
 //            viewHolde.personal_center_order_page_list_button_delete.setVisibility(View.VISIBLE);

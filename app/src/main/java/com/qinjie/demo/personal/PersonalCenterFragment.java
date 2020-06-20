@@ -1,13 +1,16 @@
 package com.qinjie.demo.personal;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -156,8 +161,21 @@ public class PersonalCenterFragment extends Fragment {
                     layout_edit_person_info_profile.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            startActivityForResult(i,9090);
+                            //第二个参数是需要申请的权限
+                            if (ContextCompat.checkSelfPermission(getActivity(),
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                    != PackageManager.PERMISSION_GRANTED)
+                            {
+
+                                //权限还没有授予，需要在这里写申请权限的代码
+                                ActivityCompat.requestPermissions(getActivity(),
+                                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                        1);
+                            }else {
+                                //权限已经被授予，在这里直接写要执行的相应方法即可
+                                takePhoto();
+                            }
+
                         }
                     });
 
@@ -183,6 +201,7 @@ public class PersonalCenterFragment extends Fragment {
                     Bundle bundle4 = msg.getData();
                     //设置新的头像到弹出框（修改框）
                     String profile = (String) bundle4.get("profile");
+                    Log.e("头像", profile);
                     ImageView profileImage = pop_up_to_modify.findViewById(R.id.layout_edit_person_info_profile);
                     profileImage.setTag(profile);
                     Glide.with(getContext()).load(profile).into(profileImage);
@@ -210,8 +229,9 @@ public class PersonalCenterFragment extends Fragment {
                     int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                     String picturePath = cursor.getString(columnIndex);
                     cursor.close();
+                    Log.e("ERROR", "上传文件");
+                     HttpClient1.upLoadImg(getString(R.string.server_path)+getString(R.string.interface_files_upload),picturePath, myHandler, ((MyApplication)getActivity().getApplication()).getToken());
 
-                    HttpClient1.upLoadImg(getString(R.string.server_path)+getString(R.string.interface_files_upload),picturePath, myHandler, "");
                 }
             }
         }
@@ -256,5 +276,29 @@ public class PersonalCenterFragment extends Fragment {
                 myHandler.sendMessage(message);
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+
+        if (requestCode == 1)
+        {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                takePhoto();
+            } else
+            {
+                // Permission Denied
+                Toast.makeText(getContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void takePhoto(){
+        //权限已经被授予，在这里直接写要执行的相应方法即可
+        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i,9090);
     }
 }

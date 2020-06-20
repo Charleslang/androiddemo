@@ -1,7 +1,9 @@
 package com.qinjie.demo.login;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.MyApplication;
 import com.alibaba.fastjson.JSONObject;
@@ -66,6 +69,7 @@ public class LoginMainActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         //存在token直接登陆
         String token = null;
         if(!(token = PersistenceToken.getToken(LoginMainActivity.this)).equals("")){

@@ -39,10 +39,10 @@ public class MainMainActivity extends AppCompatActivity {
         mViewPager = findViewById(R.id.fragment_vp);
         mTabRadioGroup = findViewById(R.id.tabs_rg);
         // init fragment
-        mFragments = new ArrayList<>(4);
+        mFragments = new ArrayList<>(2);
         mFragments.add(new HomePageFragment());
-        mFragments.add(new BlankFragment());
-        mFragments.add(new BlankFragment());
+//        mFragments.add(new BlankFragment());
+//        mFragments.add(new BlankFragment());
         mFragments.add(new PersonalCenterFragment());
         // init view pager
         mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), mFragments);

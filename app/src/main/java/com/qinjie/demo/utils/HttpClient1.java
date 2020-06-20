@@ -126,7 +126,8 @@ public class HttpClient1 {
                 .addHeader("token", token)
                 .post(requestBody)
                 .build();
-        okhttp.newBuilder().readTimeout(10000, TimeUnit.MILLISECONDS).build().newCall(request).enqueue(new Callback() {
+        Log.d("Timeout", "ERR");
+        okhttp.newBuilder().readTimeout(5000, TimeUnit.MILLISECONDS).build().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
@@ -135,8 +136,10 @@ public class HttpClient1 {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                Log.e("错误", response.message());
                 if (response.isSuccessful()) {
                     JSONObject jsonObject = JSONObject.parseObject(response.body().string());
+                    Log.e("返回结果", jsonObject.toJSONString());
                     if (jsonObject.get("code").equals(200)) {
                         Message mes = new Message();
                         Bundle bundle = new Bundle();
@@ -149,6 +152,7 @@ public class HttpClient1 {
             }
         });
 
+        Log.d("Timeout", "ERR");
 
     }
 
