@@ -5,6 +5,7 @@ public class OrderAddressDTO {
     private String aPhone;
     private String aUserId;
     private String aUsername;
+    private Integer userType;
 
     public String getaUsername() {
         return aUsername;
@@ -38,13 +39,22 @@ public class OrderAddressDTO {
         this.aUserId = aUserId;
     }
 
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
+
     @Override
     public String toString() {
-        return "AddressDTO{" +
+        return "OrderAddressDTO{" +
                 "aDetails='" + aDetails + '\'' +
                 ", aPhone='" + aPhone + '\'' +
                 ", aUserId='" + aUserId + '\'' +
-                ", aUserame='" + aUsername + '\'' +
+                ", aUsername='" + aUsername + '\'' +
+                ", userType='" + userType + '\'' +
                 '}';
     }
 }

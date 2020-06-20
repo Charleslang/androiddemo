@@ -62,7 +62,6 @@ public class OrderActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 1:
-//                    initView();
                     addressDTO = (OrderAddressDTO) msg.obj;
                     initView();
                     break;
@@ -79,8 +78,8 @@ public class OrderActivity extends AppCompatActivity {
         nf.setMaximumFractionDigits(2);
 
         initDate();
-        initView();
-//        getAddress(((MyApplication) getApplication()).getToken());
+//        initView();
+        getAddress(((MyApplication) getApplication()).getToken());
     }
 
     public void initView(){
@@ -105,9 +104,11 @@ public class OrderActivity extends AppCompatActivity {
         orderPaymoney.setText("待支付" + nf.format(cost + 2));
         orderBpaymoney.setText("待支付" + nf.format(cost + 2));
         //新增
-//        orderLocation.setText(addressDTO.getaDetails());
-//        orderName.setText(addressDTO.getaUsername());
-//        orderTel.setText(addressDTO.getaPhone());
+        if (addressDTO != null){
+            orderLocation.setText(addressDTO.getaDetails());
+            orderName.setText(addressDTO.getaUsername());
+            orderTel.setText(addressDTO.getaPhone());
+        }
 
         orderTopContent.getPaint().setFakeBoldText(true);
         orderPaymoney.getPaint().setFakeBoldText(true);
@@ -138,7 +139,7 @@ public class OrderActivity extends AppCompatActivity {
                             String json = gsonObj.toJson(insertOrderDTO);
                             RequestBody requestBody = RequestBody.create(JSON, json);
                             Request request = new Request.Builder()
-                                    .url("http://192.168.43.131:8080/GCSJProject/order/insert")
+                                    .url(getString(R.string.server_path_djf) + "/order/insert")
                                     .post(requestBody)
                                     .build();
                             try (Response response = okHttpClient.newCall(request).execute()) {
@@ -190,24 +191,26 @@ public class OrderActivity extends AppCompatActivity {
         float price = Float.parseFloat(MyBigDecimal.add(cost,2));
         Log.d("价格price---:" ,price + "------------------");
         Log.d("加法->",MyBigDecimal.add(cost,2));
-        insertOrderDTO = new InsertOrderDTO(price, String.valueOf(1),1,"react",
-                orderLocation.getText().toString(),
-                "零食店铺(成信大店)",
-                null,orderDetailsDTOList);
-//        insertOrderDTO = new InsertOrderDTO(price, addressDTO.getaUserId(),1,orderName.getText().toString(),
+//        insertOrderDTO = new InsertOrderDTO(price, String.valueOf(1),1,"react",
 //                orderLocation.getText().toString(),
 //                "零食店铺(成信大店)",
 //                null,orderDetailsDTOList);
+        insertOrderDTO = new InsertOrderDTO(price, addressDTO.getaUserId(),addressDTO.getUserType(),
+                orderName.getText().toString(),
+                orderLocation.getText().toString(),
+                "零食店铺(成信大店)",
+                null,orderDetailsDTOList);
     }
 
 
     //新增查询收货地址
     public void getAddress(final String token){
+        Log.d("token-----", token);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 Request request = new Request.Builder()
-                        .url("http://192.168.43.131:8080/GCSJProject/order/addr")
+                        .url(getString(R.string.server_path_djf) + "/order/addr")
                         .get()
                         .addHeader("token", token)
                         .build();
@@ -221,7 +224,6 @@ public class OrderActivity extends AppCompatActivity {
                         message.obj = addressDTO;
                         mHandler.sendMessage(message);
                     }
-                    Log.d("地址信息-----","为空NULL");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
